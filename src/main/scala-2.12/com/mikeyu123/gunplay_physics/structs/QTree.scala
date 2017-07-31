@@ -9,8 +9,9 @@ class QTree(primitives: Set[GeometryPrimitive], aabb: AABB, capacity: Int) {
 //  val node_3: QTree =
 //  val node_4: QTree =
 
-//  def sort_primitives: Set[Set[GeometryPrimitive]] = {
+  def sort_primitives: Set[Set[GeometryPrimitive]] = {
 //    primitives11
-//    val s = Set[Set[GeometryPrimitive]](Rectangle(Point(0, 0), Point(8, 8),Point(0, 0), Point(8, 8)))
-//  }
+    val s: Set[GeometryPrimitive] = Set(Rectangle(Point(0, 0), Point(8, 8),Point(0, 0), Point(8, 8)))
+    Set(s)
+  }
 }
