@@ -4,7 +4,8 @@ package com.mikeyu123.gunplay_physics.structs
   * Created by mihailurcenkov on 09.07.17.
   */
 //FIXME hard dependency on point order
-case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point) {
+case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point) extends GeometryPrimitive{
+
   def lines: Set[LineSegment] = {
     Set(
       LineSegment(point1, point2),
@@ -28,5 +29,14 @@ case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point)
 
   def center : Point = {
     point1 + (point3 - point1) / 2
+  }
+
+  def get_AABB: AABB = {
+    val p: List[Point] = List(point1, point2, point3, point4)
+    def min(p0: Point, p1:Point): Point = Point(if (p0.x < p1.x) p0.x else p1.x, if (p0.y < p1.y) p0.y else p1.y)
+    def max(p0: Point, p1:Point): Point = Point(if (p0.x > p1.x) p0.x else p1.x, if (p0.y > p1.y) p0.y else p1.y)
+    val lb = p.fold(point1){(a, p) => min(a, p)}
+    val rt = p.fold(point1){(a, p) => max(a, p)}
+    AABB(lb, rt)
   }
 }
