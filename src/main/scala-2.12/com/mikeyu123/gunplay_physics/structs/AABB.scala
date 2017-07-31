@@ -16,8 +16,8 @@ case class AABB(left_bottom: Point, right_top: Point) {
     val rb: Point = Point(right_top.x, left_bottom.y)
     val points: List[Point] = List(right_top, lt, left_bottom, rb)
     points.exists{p =>
-      val pr = (p.x < b.right_top.x) && (p.x > b.left_bottom.x) &&
-        (p.y < b.right_top.y) && (p.y > b.left_bottom.y)
+      val pr = (p.x <= b.right_top.x) && (p.x >= b.left_bottom.x) &&
+        (p.y <= b.right_top.y) && (p.y >= b.left_bottom.y)
       if (pr) true else false
     }
   }
