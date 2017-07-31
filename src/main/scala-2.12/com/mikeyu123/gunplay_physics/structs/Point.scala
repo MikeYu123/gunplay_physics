@@ -22,4 +22,12 @@ case class Point(x: Double, y: Double) {
   def +(vector: Vector) = {
     Point(x + vector.dx, y + vector.dy)
   }
+
+  def min(b: Point): Point = { // (2, 5).min((3,4)) = (2, 4)
+    Point(Math.min(x, b.x), Math.min(y, b.y))
+  }
+
+  def max(b: Point): Point = {
+    Point(Math.max(x, b.x), Math.max(y, b.y))
+  }
 }

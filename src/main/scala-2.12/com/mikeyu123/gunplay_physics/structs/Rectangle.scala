@@ -37,10 +37,8 @@ case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point)
 
   def get_AABB: AABB = {
     val p: List[Point] = points
-    def min(p0: Point, p1:Point): Point = Point(if (p0.x < p1.x) p0.x else p1.x, if (p0.y < p1.y) p0.y else p1.y)
-    def max(p0: Point, p1:Point): Point = Point(if (p0.x > p1.x) p0.x else p1.x, if (p0.y > p1.y) p0.y else p1.y)
     val (a:Point, b:Point) = p.fold((point1, point1):Tuple2[Point, Point]){
-      case ((a: Point, b: Point), p: Point) => (min(a, p), max(b, p))
+      case ((a: Point, b: Point), p: Point) => (a.min(p), b.max(p))
     }
     AABB(a, b)
   }
