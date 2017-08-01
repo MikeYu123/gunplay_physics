@@ -36,8 +36,6 @@ class QTreeMethods extends GraphicsSpec {
 
   it should "sort test" in {
     val qTree: QTree = setup
-    val sets: Map[AABB, Set[GeometryPrimitive]] = Map()
-
     val res = qTree.sortPrimitives
     res should equal {
       Map((AABB(Point(4, 5), Point(7, 8)),
@@ -50,6 +48,15 @@ class QTreeMethods extends GraphicsSpec {
           Set(r3, r4, r5))
       )
     }
+  }
+
+  it should "traverse test" in {
+    val qTree: QTree = setup
+    val res = qTree.traverse
+
+//    println(res)
+
+//    res should equal {    }
   }
 
 }

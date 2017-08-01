@@ -1,14 +1,24 @@
 package com.mikeyu123.gunplay_physics.structs
 
+import com.mikeyu123.gunplay_physics.util.ContactListner
+
 class QTree(primitives: Set[GeometryPrimitive], aabb: AABB, capacity: Int) {
 
   val nodesAabb: Set[AABB] = aabb.divide
   type AabbMap = Map[AABB, Set[GeometryPrimitive]]
 
-  //  val node_1: QTree =
-  //  val node_2: QTree =
-  //  val node_3: QTree =
-  //  val node_4: QTree =
+  val childs: Set[QTree] = if (primitives.size > capacity) sortPrimitives.foldLeft(Set[QTree]()) {
+    (childs, m) =>
+      childs + new QTree(m._2, m._1, capacity)
+  } else Set[QTree]()
+
+  def traverse: Unit = {
+    if (childs.nonEmpty) {
+//      println(this.aabb)
+      childs.map(_.traverse)
+    }
+    else println(this.aabb)
+  }
 
   def sortPrimitives: AabbMap = {
     val base: AabbMap = Map[AABB, Set[GeometryPrimitive]]()
@@ -17,10 +27,10 @@ class QTree(primitives: Set[GeometryPrimitive], aabb: AABB, capacity: Int) {
 
   def insert(sets: AabbMap, p: GeometryPrimitive): AabbMap = {
     val pAabb: AABB = p.getAabb
-    nodesAabb.foldLeft(sets) { case (set: AabbMap, aabb: AABB) =>
+    nodesAabb.foldLeft(sets) { (set, aabb) =>
       val pr = aabb.intersects(pAabb)
       if (pr) {
-        val newSet: Set[GeometryPrimitive] = sets.getOrElse(aabb, Set[GeometryPrimitive]()) + p
+        val newSet = sets.getOrElse(aabb, Set[GeometryPrimitive]()) + p
         set.updated(aabb, newSet)
       } else set
     }
