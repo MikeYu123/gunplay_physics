@@ -10,16 +10,45 @@ class QTreeMethods extends GraphicsSpec {
     Rectangle(Point(x - side / 2, y - side / 2), Point(x - side / 2, y + side / 2), Point(x + side / 2, y + side / 2), Point(x + side / 2, y - side / 2))
   }
 
-  it should "insert test" in {
-    val s: Set[GeometryPrimitive] = Set(spawnRect(1.5, 6.5), spawnRect(2.5, 2.5), spawnRect(2.5, 5.5),
-      spawnRect(4.5, 4.5), spawnRect(5.5, 5.5), spawnRect(6.5, 5.5), spawnRect(6.5, 7.5))
+  val r0 = spawnRect(1.5, 6.5)
+  val r1 = spawnRect(2.5, 2.5)
+  val r2 = spawnRect(2.5, 5.5)
+  val r3 = spawnRect(4.5, 4.5)
+  val r4 = spawnRect(5.5, 5.5)
+  val r5 = spawnRect(6.5, 5.5)
+  val r6 = spawnRect(6.5, 7.5)
+
+  def setup: QTree = {
+    val s: Set[GeometryPrimitive] = Set(r0, r1, r2, r3, r4, r5, r6)
     val aabb: AABB = AABB(Point(1, 2), Point(7, 8))
     val capacity: Int = 3
-    val qTree: QTree = new QTree(s, aabb, capacity)
+    new QTree(s, aabb, capacity)
+  }
+
+  it should "insert test" in {
+    val qTree: QTree = setup
     val sets: Map[AABB, Set[GeometryPrimitive]] = Map()
     val q: Map[AABB, Set[GeometryPrimitive]] = qTree.insert(sets, spawnRect(1.5, 6.5))
     q should equal {
-          Map((AABB(Point(1,5), Point(4,8)), Set(spawnRect(1.5, 6.5))))
+      Map((AABB(Point(1, 5), Point(4, 8)), Set(r0)))
+    }
+  }
+
+  it should "sort test" in {
+    val qTree: QTree = setup
+    val sets: Map[AABB, Set[GeometryPrimitive]] = Map()
+
+    val res = qTree.sortPrimitives
+    res should equal {
+      Map((AABB(Point(4, 5), Point(7, 8)),
+        Set(r3, r4, r5, r6)),
+        (AABB(Point(1, 5), Point(4, 8)),
+          Set(r0, r2, r3)),
+        (AABB(Point(1, 2), Point(4, 5)),
+          Set(r1, r2, r3)),
+        (AABB(Point(4, 2), Point(7, 5)),
+          Set(r3, r4, r5))
+      )
     }
   }
 
