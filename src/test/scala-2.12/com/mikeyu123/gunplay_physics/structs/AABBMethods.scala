@@ -16,6 +16,24 @@ class AABBMethods extends GraphicsSpec{
     )
   }
 
+  it should "render correct AABB center" in {
+    AABB(Point(1, 0), Point(3, 2)).getCenter should equal(
+      Point(2.0d, 1.0d)
+    )
+  }
+
+  it should "render correct AABB width" in {
+    AABB(Point(1, 0), Point(3.1, 2)).getW should equal(
+      2.1d
+    )
+  }
+
+  it should "render correct AABB height" in {
+    AABB(Point(1, 0), Point(3, 5.2)).getH should equal(
+      5.2d
+    )
+  }
+
   it should "render correct AABB intersection" in {
     AABB(Point(1, 0), Point(3, 2)).intersects(AABB(Point(0, 1), Point(2, 3))) should equal(
       true
@@ -24,6 +42,12 @@ class AABBMethods extends GraphicsSpec{
 
   it should "render correct AABB intersection 1" in {
     AABB(Point(0, 0), Point(2, 2)).intersects(AABB(Point(0, 2), Point(2, 3))) should equal(
+      true
+    )
+  }
+
+  it should "render correct AABB intersection 2" in {
+    AABB(Point(1, 5), Point(4, 8)).intersects(AABB(Point(1, 6), Point(2, 7))) should equal(
       true
     )
   }
