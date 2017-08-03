@@ -1,10 +1,9 @@
 package com.mikeyu123.gunplay_physics.structs
 
-import com.mikeyu123.gunplay_physics.util.ContactListner
-
 class QTree(primitives: Set[GeometryPrimitive], aabb: AABB, capacity: Int) {
 
   val nodesAabb: Set[AABB] = aabb.divide
+//  Map that specifies 'belongs_to' relation between aabbs(Qtree nodes) and primitives inside it
   type AabbMap = Map[AABB, Set[GeometryPrimitive]]
 
   val childs: Set[QTree] = if (primitives.size > capacity) sortPrimitives.foldLeft(Set[QTree]()) {
@@ -27,10 +26,10 @@ class QTree(primitives: Set[GeometryPrimitive], aabb: AABB, capacity: Int) {
 
   def insert(sets: AabbMap, p: GeometryPrimitive): AabbMap = {
     val pAabb: AABB = p.getAabb
-    nodesAabb.foldLeft(sets) { (set, aabb) =>
+    nodesAabb.foldLeft(sets) { (set: AabbMap, aabb: AABB) =>
       val pr = aabb.intersects(pAabb)
       if (pr) {
-        val newSet = sets.getOrElse(aabb, Set[GeometryPrimitive]()) + p
+        val newSet: Set[GeometryPrimitive] = sets.getOrElse(aabb, Set[GeometryPrimitive]()) + p
         set.updated(aabb, newSet)
       } else set
     }
