@@ -33,11 +33,13 @@ case class AABB(left_bottom: Point, right_top: Point) {
     right_top.y - left_bottom.y
   }
 
+  def diagonal: Vector = right_top - left_bottom
+
   def intersects(b: AABB): Boolean = {
     val c1: Point = getCenter
     val c2: Point = b.getCenter
     val (dx: Double, dy: Double) = (math.abs(c1.x - c2.x), math.abs(c1.y - c2.y))
-    val (dw: Double, dh: Double) = ((getW + b.getW) / 2, (getH + b.getH) / 2)
+    val Vector(dw: Double, dh: Double) = (diagonal + b.diagonal) / 2
     (dx <= dw) && (dy <= dh)
   }
 }

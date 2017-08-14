@@ -30,7 +30,7 @@ class QTree(primitives: Set[GeometryPrimitive], aabb: AABB, capacity: Int) {
       val pr = aabb.intersects(pAabb)
       if (pr) {
         val newSet: Set[GeometryPrimitive] = sets.getOrElse(aabb, Set[GeometryPrimitive]()) + p
-        set.updated(aabb, newSet)
+        set + (aabb -> newSet)
       } else set
     }
   }

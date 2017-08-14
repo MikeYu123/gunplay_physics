@@ -5,6 +5,8 @@ package com.mikeyu123.gunplay_physics.structs
   */
 
 case class Vector(dx: Double, dy: Double) {
+  def +(other: Vector) = Vector(dx + other.dx, dy + other.dy)
+
   def *(other: Vector): Double = {
     dx * other.dx + dy * other.dy
   }

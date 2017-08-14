@@ -17,6 +17,12 @@ class VectorSpec extends FlatSpec {
     (vector1 * 2) should equal(Vector(6, 8))
   }
 
+  it should "calculate sum correctly" in {
+    val vector1 = Vector(3, 4)
+    val vector2 = Vector(-2, 1)
+    (vector1 + vector2) should equal(Vector(1, 5))
+  }
+
   it should "calculate division correctly" in {
     val vector1 = Vector(3, 4)
     (vector1 / 2) should equal(Vector(1.5, 2))
