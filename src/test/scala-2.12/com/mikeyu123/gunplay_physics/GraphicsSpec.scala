@@ -9,7 +9,7 @@ import org.scalatest.FlatSpec
   * Created by mihailurcenkov on 12.07.17.
   */
 //TODO: refactor and determine whether this can be achieved somehow different
-class GraphicsSpec extends FlatSpec {
+trait GraphicsSpec extends FlatSpec {
   def doubleEq: Equality[Double] = TolerantNumerics.tolerantDoubleEquality(0.0001)
 
   def pointEq: Equality[Point] = (a: Point, b: Any) => {
