@@ -1,9 +1,10 @@
 package com.mikeyu123.gunplay_physics.structs
 
-case class AABB(leftBottom: Point, rightTop: Point) {
-
+object AABB {
   def apply(x0: Double, y0: Double, x1: Double, y1: Double): AABB = AABB(Point(x0, y0), Point(x1, y1))
+}
 
+case class AABB(leftBottom: Point, rightTop: Point) {
   def divide: Set[AABB] = {
     val divisionPoint: Point = getCenter
     val q1: AABB = AABB(divisionPoint, rightTop)
