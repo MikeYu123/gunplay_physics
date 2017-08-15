@@ -1,13 +1,16 @@
 package com.mikeyu123.gunplay_physics.util
 
 import com.mikeyu123.gunplay_physics.objects.PhysicsObject
+import com.mikeyu123.gunplay_physics.structs._
 
-object ContactListener {
+object ContactHandler {
 
-  def contact(a: PhysicsObject, b: PhysicsObject):Double = {
+  def handle(objs: Set[PhysicsObject]): Set[PhysicsObject] = {
 
-    0
+    val updated = objs.map(_.applyMotion)
 
+//    val qtree: QTree = QTree(objs, )
+    Set()
   }
 
 }
