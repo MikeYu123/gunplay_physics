@@ -1,7 +1,9 @@
 package com.mikeyu123.gunplay_physics.structs
 
-abstract class GeometryPrimitive(impetus: Vector, angle: Double) {
+abstract class GeometryPrimitive{
   def center: Point
   def getAabb: AABB
-  def getProjection: GeometryPrimitive
+  def move(path: Vector):GeometryPrimitive
+  def rotate(center:Point, angle: Double):GeometryPrimitive
+
 }

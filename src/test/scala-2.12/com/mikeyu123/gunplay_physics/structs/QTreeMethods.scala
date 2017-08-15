@@ -1,6 +1,7 @@
 package com.mikeyu123.gunplay_physics.structs
 
 import com.mikeyu123.gunplay_physics.GraphicsSpec
+import com.mikeyu123.gunplay_physics.objects.PhysicsObject
 import org.scalatest.Matchers._
 
 
@@ -10,16 +11,17 @@ class QTreeMethods extends GraphicsSpec {
     Rectangle(Point(x - side / 2, y - side / 2), Point(x - side / 2, y + side / 2), Point(x + side / 2, y + side / 2), Point(x + side / 2, y - side / 2))
   }
 
-  val r0 = spawnRect(1.5, 6.5)
-  val r1 = spawnRect(2.5, 2.5)
-  val r2 = spawnRect(2.5, 5.5)
-  val r3 = spawnRect(4.5, 4.5)
-  val r4 = spawnRect(5.5, 5.5)
-  val r5 = spawnRect(6.5, 5.5)
-  val r6 = spawnRect(6.5, 7.5)
+  val pr = PhysicsProperties(0, true, false)
+  val r0 = PhysicsObject(spawnRect(1.5, 6.5), Point(0, 0), pr)
+  val r1 = PhysicsObject(spawnRect(2.5, 2.5), Point(0, 0), pr)
+  val r2 = PhysicsObject(spawnRect(2.5, 5.5), Point(0, 0), pr)
+  val r3 = PhysicsObject(spawnRect(4.5, 4.5), Point(0, 0), pr)
+  val r4 = PhysicsObject(spawnRect(5.5, 5.5), Point(0, 0), pr)
+  val r5 = PhysicsObject(spawnRect(6.5, 5.5), Point(0, 0), pr)
+  val r6 = PhysicsObject(spawnRect(6.5, 7.5), Point(0, 0), pr)
 
   def setup: QTree = {
-    val s: Set[GeometryPrimitive] = Set(r0, r1, r2, r3, r4, r5, r6)
+    val s: Set[PhysicsObject] = Set(r0, r1, r2, r3, r4, r5, r6)
     val aabb: AABB = AABB(Point(1, 2), Point(7, 8))
     val capacity: Int = 3
     new QTree(s, aabb, capacity)
@@ -27,8 +29,8 @@ class QTreeMethods extends GraphicsSpec {
 
   it should "insert test" in {
     val qTree: QTree = setup
-    val sets: Map[AABB, Set[GeometryPrimitive]] = Map()
-    val q: Map[AABB, Set[GeometryPrimitive]] = qTree.insert(sets, spawnRect(1.5, 6.5))
+    val sets: Map[AABB, Set[PhysicsObject]] = Map()
+    val q: Map[AABB, Set[PhysicsObject]] = qTree.insert(sets, r0)
     q should equal {
       Map((AABB(Point(1, 5), Point(4, 8)), Set(r0)))
     }
@@ -50,13 +52,13 @@ class QTreeMethods extends GraphicsSpec {
     }
   }
 
-  it should "traverse test" in {
-    val qTree: QTree = setup
-    val res = qTree.traverse
+  //  it should "traverse test" in {
+  //    val qTree: QTree = setup
+  //    val res = qTree.traverse
 
-//    println(res)
+  //    println(res)
 
-//    res should equal {    }
-  }
+  //    res should equal {    }
+  //  }
 
 }

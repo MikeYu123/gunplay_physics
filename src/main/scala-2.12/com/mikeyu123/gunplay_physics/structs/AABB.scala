@@ -1,13 +1,13 @@
 package com.mikeyu123.gunplay_physics.structs
 
-case class AABB(left_bottom: Point, right_top: Point) {
+case class AABB(leftBottom: Point, rightTop: Point) {
 
   def divide: Set[AABB] = {
     val divisionPoint: Point = getCenter
-    val q1: AABB = AABB(divisionPoint, right_top)
-    val q3: AABB = AABB(left_bottom, divisionPoint)
-    val q2: AABB = AABB(Point(left_bottom.x, divisionPoint.y), Point(divisionPoint.x, right_top.y))
-    val q4: AABB = AABB(Point(divisionPoint.x, left_bottom.y), Point(right_top.x, divisionPoint.y))
+    val q1: AABB = AABB(divisionPoint, rightTop)
+    val q3: AABB = AABB(leftBottom, divisionPoint)
+    val q2: AABB = AABB(Point(leftBottom.x, divisionPoint.y), Point(divisionPoint.x, rightTop.y))
+    val q4: AABB = AABB(Point(divisionPoint.x, leftBottom.y), Point(rightTop.x, divisionPoint.y))
     Set[AABB](q1, q2, q3, q4)
   }
 
@@ -22,18 +22,18 @@ case class AABB(left_bottom: Point, right_top: Point) {
   //  }
 
   def getCenter: Point = {
-    Point((right_top.x + left_bottom.x) / 2, (right_top.y + left_bottom.y) / 2)
+    Point((rightTop.x + leftBottom.x) / 2, (rightTop.y + leftBottom.y) / 2)
   }
 
   def getW: Double = {
-    right_top.x - left_bottom.x
+    rightTop.x - leftBottom.x
   }
 
   def getH: Double = {
-    right_top.y - left_bottom.y
+    rightTop.y - leftBottom.y
   }
 
-  def diagonal: Vector = right_top - left_bottom
+  def diagonal: Vector = rightTop - leftBottom
 
   def intersects(b: AABB): Boolean = {
     val c1: Point = getCenter

@@ -1,5 +1,5 @@
 package com.mikeyu123.gunplay_physics.objects
 
-class Scene {
+case class Scene() {
 
 }
