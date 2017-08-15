@@ -4,6 +4,7 @@ import com.mikeyu123.gunplay_physics.objects.PhysicsObject
 
 case class QTree(objs: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, capacity: Int, depth: Int) {
 
+//  TODO possibly refactor via inheritance & matches
   def insert(obj: PhysicsObject): QTree = {
     if (obj.getAabb.intersects(aabb)) {
       if (nodes.nonEmpty)
