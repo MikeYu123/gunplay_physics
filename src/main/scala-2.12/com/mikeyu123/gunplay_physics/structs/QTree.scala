@@ -19,6 +19,6 @@ case class QTree(objs: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, capaci
   def subdivide: QTree = {
     val nodeAabbs = aabb.divide
     val nodes: Set[QTree] = nodeAabbs.map(aabb => QTree(Set(), Set(), aabb, capacity, depth - 1))
-    objs.foldLeft(QTree(Set(), nodes, aabb, capacity, depth)) { (tree, obj) => tree.insert(obj) }
+    objs.foldLeft(QTree(Set(), nodes, aabb, capacity, depth))((tree, obj) => tree.insert(obj))
   }
 }
