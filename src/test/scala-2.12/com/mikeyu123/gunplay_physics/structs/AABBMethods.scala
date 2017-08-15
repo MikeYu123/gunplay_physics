@@ -52,6 +52,13 @@ class AABBMethods extends GraphicsSpec{
     )
   }
 
+
+  it should "render correct AABB intersection 3" in {
+    AABB(Point(4, 2), Point(7, 5)).intersects(AABB(Point(5, 5), Point(6, 6))) should equal(
+      true
+    )
+  }
+
   it should "render incorrect AABB intersection" in {
     AABB(Point(0, 0), Point(2, 2)).intersects(AABB(Point(0, 3), Point(2, 5))) should equal(
       false

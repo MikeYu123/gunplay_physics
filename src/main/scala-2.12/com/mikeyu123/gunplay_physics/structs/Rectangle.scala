@@ -4,7 +4,7 @@ package com.mikeyu123.gunplay_physics.structs
   * Created by mihailurcenkov on 09.07.17.
   */
 //FIXME hard dependency on point order
-case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point) extends GeometryPrimitive{
+case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point) extends GeometryPrimitive {
 
   def lines: Set[LineSegment] = {
     Set(
@@ -41,5 +41,9 @@ case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point)
       case ((a: Point, b: Point), p: Point) => (a.min(p), b.max(p))
     }
     AABB(a, b)
+  }
+
+  def debugToString: String = {
+    "Rect(" + center.x + ", " + center.y+")"
   }
 }

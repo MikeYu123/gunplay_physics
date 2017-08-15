@@ -2,38 +2,22 @@ package com.mikeyu123.gunplay_physics.structs
 
 import com.mikeyu123.gunplay_physics.objects.PhysicsObject
 
-class QTree(primitives: Set[PhysicsObject], aabb: AABB, capacity: Int) {
+case class QTree(objs: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, capacity: Int, depth: Int) {
 
-  val nodesAabb: Set[AABB] = aabb.divide
-//  Map that specifies 'belongs_to' relation between aabbs(Qtree nodes) and primitives inside it
-  type AabbMap = Map[AABB, Set[PhysicsObject]]
-
-  val children: Set[QTree] = if (primitives.size > capacity) sortPrimitives.foldLeft(Set[QTree]()) {
-    (childs, m) =>
-      childs + new QTree(m._2, m._1, capacity)
-  } else Set[QTree]()
-
-//  def traverse: Unit = {
-//    if (childs.nonEmpty) {
-////      println(this.aabb)
-//      childs.map(_.traverse)
-//    }
-//    else println(this.aabb)
-//  }
-
-  def sortPrimitives: AabbMap = {
-    val base: AabbMap = Map[AABB, Set[PhysicsObject]]()
-    primitives.foldLeft(base)(insert)
+  def insert(obj: PhysicsObject): QTree = {
+    if (obj.getAabb.intersects(aabb)) {
+      if (nodes.nonEmpty)
+        QTree(objs, nodes.map(_.insert(obj)), aabb, capacity, depth)
+      else if (objs.size < capacity || depth == 0)
+        QTree(objs + obj, nodes, aabb, capacity, depth)
+      else
+        subdivide.insert(obj)
+    } else this
   }
 
-  def insert(sets: AabbMap, p: PhysicsObject): AabbMap = {
-    val pAabb: AABB = p.getAabb
-    nodesAabb.foldLeft(sets) { (set: AabbMap, aabb: AABB) =>
-      val pr = aabb.intersects(pAabb)
-      if (pr) {
-        val newSet: Set[PhysicsObject] = sets.getOrElse(aabb, Set[PhysicsObject]()) + p
-        set + (aabb -> newSet)
-      } else set
-    }
+  def subdivide: QTree = {
+    val nodeAabbs = aabb.divide
+    val nodes: Set[QTree] = nodeAabbs.map(aabb => QTree(Set(), Set(), aabb, capacity, depth - 1))
+    objs.foldLeft(QTree(Set(), nodes, aabb, capacity, depth)) { (tree, obj) => tree.insert(obj) }
   }
 }
