@@ -1,10 +1,12 @@
 package com.mikeyu123.gunplay_physics.structs
 
+import com.mikeyu123.gunplay_physics.util.DebugToString
+
 /**
   * Created by mihailurcenkov on 09.07.17.
   */
 //FIXME hard dependency on point order
-case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point) extends GeometryPrimitive {
+case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point) extends GeometryPrimitive with DebugToString{
 
   def lines: Set[LineSegment] = {
     Set(

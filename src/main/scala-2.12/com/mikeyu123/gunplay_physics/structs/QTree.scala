@@ -1,10 +1,11 @@
 package com.mikeyu123.gunplay_physics.structs
 
 import com.mikeyu123.gunplay_physics.objects.PhysicsObject
+import scala.collection._
 
-case class QTree(objs: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, capacity: Int, depth: Int) {
+case class QTree(objs: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, capacity: Int, depth: Int) extends Iterable[Set[PhysicsObject]] {
 
-//  TODO possibly refactor via inheritance & matches
+  //  TODO possibly refactor via inheritance & matches
   def insert(obj: PhysicsObject): QTree = {
     if (obj.getAabb.intersects(aabb)) {
       if (nodes.nonEmpty)
@@ -20,5 +21,21 @@ case class QTree(objs: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, capaci
     val nodeAabbs = aabb.divide
     val nodes: Set[QTree] = nodeAabbs.map(aabb => QTree(Set(), Set(), aabb, capacity, depth - 1))
     objs.foldLeft(QTree(Set(), nodes, aabb, capacity, depth))((tree, obj) => tree.insert(obj))
+  }
+
+  def traverse: Set[Set[PhysicsObject]] = {
+    this.traverseNodes
+  }
+
+  def traverseNodes: Set[Set[PhysicsObject]] = {
+    if (this.objs.nonEmpty)
+      Set(this.objs)
+    else if (this.nodes.nonEmpty)
+      this.nodes.foldLeft(Set[Set[PhysicsObject]]()) { (set, node) => set ++ node.traverseNodes }
+    else Set()
+  }
+
+  override def iterator: Iterator[Set[PhysicsObject]] = {
+    this.traverse.iterator
   }
 }

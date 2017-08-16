@@ -55,4 +55,20 @@ class QTreeMethods extends GraphicsSpec {
     }
   }
 
+
+  it should "traverse test" in {
+    val qTree: QTree = setup
+    val tr = qTree.traverse
+
+    tr should equal {
+      Set(
+        Set(r0, r2, r3),
+        Set(r1, r2, r3),
+        Set(r3, r4, r5),
+        Set(r3, r4),
+        Set(r4, r5),
+        Set(r6)
+      )
+    }
+  }
 }

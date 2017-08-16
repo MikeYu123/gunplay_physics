@@ -17,7 +17,9 @@ case class PhysicsObject(shape: GeometryPrimitive, center: Point, properties: Ph
   }
 
   def applyMotion: PhysicsObject = {
-    this.applyMotion(this.properties.motion)
+    if (this.properties.movable)
+      this.applyMotion(this.properties.motion)
+    else this
   }
 
   def setMotion(motion: Motion): PhysicsObject={

@@ -7,10 +7,14 @@ object ContactHandler {
 
   def handle(objs: Set[PhysicsObject]): Set[PhysicsObject] = {
 
-    val updated = objs.map(_.applyMotion)
+    val updatedObjects = objs.map(_.applyMotion)
 
 //    val qtree: QTree = QTree(objs, )
     Set()
   }
+
+//  def getAabbContacts(objs: Set[PhysicsObject]): Set[Contact]={
+//
+//  }
 
 }
