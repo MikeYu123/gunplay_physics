@@ -27,9 +27,10 @@ class QTreeMethods extends GraphicsSpec {
   val r4 = spawnPhOb(5.5, 5.5)
   val r5 = spawnPhOb(6.5, 5.5)
   val r6 = spawnPhOb(6.5, 7.5)
+  val s: Set[PhysicsObject] = Set(r0, r1, r2, r3, r4, r5, r6)
 
   def setup: QTree = {
-    val s: Set[PhysicsObject] = Set(r0, r1, r2, r3, r4, r5, r6)
+
     val aabb: AABB = AABB(Point(1, 2), Point(7, 8))
     val capacity: Int = 3
     val depth: Int = 4
@@ -70,5 +71,15 @@ class QTreeMethods extends GraphicsSpec {
         Set(r6)
       )
     }
+  }
+
+
+  it should "subset test" in {
+    val qTree: QTree = setup
+    val tr = qTree.traverse
+
+    val q = tr.last
+    val w = s.subsets(2)
+//    println("1")
   }
 }

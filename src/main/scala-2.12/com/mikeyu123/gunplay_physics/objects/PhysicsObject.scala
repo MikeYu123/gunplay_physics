@@ -35,4 +35,6 @@ case class PhysicsObject(shape: GeometryPrimitive, center: Point, properties: Ph
   def lock(l: Boolean): PhysicsObject = {
     PhysicsObject(shape, center, properties.lock(l))
   }
+
+  override def toString: String = this.shape.debugToString
 }

@@ -1,6 +1,8 @@
 package com.mikeyu123.gunplay_physics.structs
 
-abstract class GeometryPrimitive {
+import com.mikeyu123.gunplay_physics.util.DebugToString
+
+abstract class GeometryPrimitive extends DebugToString{
   def center: Point
 
   def getAabb: AABB
@@ -8,6 +10,4 @@ abstract class GeometryPrimitive {
   def move(path: Vector): GeometryPrimitive
 
   def rotate(center: Point, angle: Double): GeometryPrimitive
-
-  def debugToString: String
 }
