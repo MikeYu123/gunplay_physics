@@ -1,9 +1,11 @@
 package com.mikeyu123.gunplay_physics.structs
 
 import com.mikeyu123.gunplay_physics.GraphicsSpec
+import com.mikeyu123.gunplay_physics.objects.PhysicsObject
 import com.mikeyu123.gunplay_physics.util._
-
 import org.scalatest.Matchers._
+
+import scala.collection.immutable.HashSet
 
 
 class ContactHandlerMethods extends GraphicsSpec {
@@ -60,10 +62,11 @@ class ContactHandlerMethods extends GraphicsSpec {
     }
   }
 
-  it should "combination contace test" in {
+  it should "combination contact test" in {
     val a = PhysicsObjectFactory.spawnPhOb(0, 0)
     val b = PhysicsObjectFactory.spawnPhOb(1, 0)
     val c = PhysicsObjectFactory.spawnPhOb(5, 0)
+    val d = PhysicsObjectFactory.spawnPhOb(0, 0)
     val set = Set(a, b, c)
     val res = ContactHandler.getAabbContacts(set)
 
