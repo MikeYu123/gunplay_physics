@@ -3,6 +3,9 @@ package com.mikeyu123.gunplay_physics.util
 import com.mikeyu123.gunplay_physics.objects.PhysicsObject
 import com.mikeyu123.gunplay_physics.structs._
 
+import scala.collection.immutable.HashSet
+import scala.collection.Set
+
 object ContactHandler {
 
   def handle(objs: Set[PhysicsObject]): Set[PhysicsObject] = {
@@ -13,19 +16,20 @@ object ContactHandler {
     Set()
   }
 
-  def getContacts(qTree: QTree): Set[Contact] = {
-    val base = Set[Contact]()
-    //    qTree.foldLeft(base){    }
-
-    base
+  def getAabbContacts(qTree: QTree): HashSet[Contact] = {
+    val base = HashSet[Contact]()
+    qTree.foldLeft(base) { (setOfContacts, leafObjects) =>
+      val con = getAabbContactsFromLeaf(leafObjects)
+      setOfContacts ++ con
+    }
   }
 
-  def getAabbContacts(set: Set[PhysicsObject]): Set[Contact] = {
+  def getAabbContactsFromLeaf(set: Set[PhysicsObject]): Set[Contact] = {
     val combinations = getCombinations(set)
-    combinations.foldLeft(Set[Contact]()){
-      (set, comb)=>
-        aabbContact(comb._1, comb._2) match{
-          case c:Some[Contact]=> set + c.get
+    combinations.foldLeft(Set[Contact]()) {
+      (set, comb) =>
+        aabbContact(comb._1, comb._2) match {
+          case c: Some[Contact] => set + c.get
           case _ => set
         }
     }

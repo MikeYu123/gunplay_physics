@@ -69,25 +69,10 @@ class ContactMethods extends GraphicsSpec {
     }
   }
 
-  def time[R](block: => R): R = {
+  def time[R](block: => R): String = {
     val t0 = System.nanoTime()
     val result = block // call-by-name
     val t1 = System.nanoTime()
-    println("Elapsed time: " + (t1 - t0) + "ns")
-    result
-  }
-
-  def randSet(n: Int): Set[Int] = {
-
-    val r = Random
-    (for (i <- 0 until n) yield r.nextInt(n)).toSet
-  }
-
-  it should "speed test" in {
-    val set = randSet(4).map(PhysicsObjectFactory.spawnPhOb(_))
-    val con = ContactHandler.getAabbContacts(set)
-    val con0 = con.map(ContactWithSet(_))
-    time(con.foldLeft(HashSet[Contact]()) { (a, b) => a + b })
-    time(con0.foldLeft(HashSet[ContactWithSet]()) { (a, b) => a + b })
+    "Elapsed time: " + (t1 - t0) + "ns "
   }
 }

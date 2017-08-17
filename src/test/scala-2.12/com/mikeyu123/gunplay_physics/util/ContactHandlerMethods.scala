@@ -1,8 +1,8 @@
-package com.mikeyu123.gunplay_physics.structs
+package com.mikeyu123.gunplay_physics.util
 
 import com.mikeyu123.gunplay_physics.GraphicsSpec
 import com.mikeyu123.gunplay_physics.objects.PhysicsObject
-import com.mikeyu123.gunplay_physics.util._
+import com.mikeyu123.gunplay_physics.structs._
 import org.scalatest.Matchers._
 
 import scala.collection.immutable.HashSet
@@ -66,12 +66,28 @@ class ContactHandlerMethods extends GraphicsSpec {
     val a = PhysicsObjectFactory.spawnPhOb(0, 0)
     val b = PhysicsObjectFactory.spawnPhOb(1, 0)
     val c = PhysicsObjectFactory.spawnPhOb(5, 0)
-    val d = PhysicsObjectFactory.spawnPhOb(0, 0)
     val set = Set(a, b, c)
-    val res = ContactHandler.getAabbContacts(set)
+    val res = ContactHandler.getAabbContactsFromLeaf(set)
+    res should equal {
+      Set(Contact(a, b, 0))
+    }
+  }
 
-    res.size should equal {
-      1
+  def qtreeSetup: QTree = {
+    val aabb: AABB = AABB(0, 0, 6, 6)
+    val capacity: Int = 3
+    val depth: Int = 4
+    val objs = PhysicsObjectFactory.spawnPhOb((1, 1), (2, 1), (4, 3), (5, 3), (4, 5))
+    QTreeBuilder(objs, aabb, capacity, depth)
+  }
+
+  it should "getAabbContacts" in {
+    val tree: QTree = qtreeSetup
+    val n = tree.nodes
+    val res: HashSet[Contact] = ContactHandler.getAabbContacts(tree)
+    res should equal {
+      HashSet(Contact(PhysicsObjectFactory.spawnPhOb(1, 1), PhysicsObjectFactory.spawnPhOb(2, 1), 0),
+        Contact(PhysicsObjectFactory.spawnPhOb(4, 3), PhysicsObjectFactory.spawnPhOb(5, 3), 0))
     }
   }
 }

@@ -5,7 +5,10 @@ import com.mikeyu123.gunplay_physics.objects.PhysicsObject
 object PhysicsObjectFactory {
 
   def spawnRect(x: Double, y: Double): Rectangle = {
-    val side = 1.0
+    spawnRect(x, y, 1)
+  }
+
+  def spawnRect(x: Double, y: Double, side: Double): Rectangle = {
     Rectangle(Point(x - side / 2, y - side / 2), Point(x - side / 2, y + side / 2),
       Point(x + side / 2, y + side / 2), Point(x + side / 2, y - side / 2))
   }
@@ -21,4 +24,10 @@ object PhysicsObjectFactory {
     PhysicsObject(GeometryStub(d), Point(d, d), pr)
   }
 
+  def spawnPhOb(coords: Tuple2[Double, Double]*): Set[PhysicsObject] = {
+    coords.map {
+      t =>
+        spawnPhOb(t._1, t._2)
+    }.toSet
+  }
 }
