@@ -22,4 +22,8 @@ case class Vector(dx: Double, dy: Double) {
   def pseudoScalar(other: Vector): Double = {
     dx * other.dy - dy * other.dx
   }
+
+  def dot(that: Vector): Double = {
+    this.dx * that.dx + this.dy * that.dy
+  }
 }

@@ -6,6 +6,7 @@ import com.mikeyu123.gunplay_physics.util.DebugToString
   * Created by mihailurcenkov on 09.07.17.
   */
 //FIXME hard dependency on point order
+// !!!clockwise order!!!
 case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point) extends GeometryPrimitive{
 
   def lines: Set[LineSegment] = {
@@ -33,12 +34,12 @@ case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point)
     point1 + (point3 - point1) / 2
   }
 
-  def points: List[Point] = {
-    List[Point](point1, point2, point3, point4)
+  def points: Set[Point] = {
+    Set[Point](point1, point2, point3, point4)
   }
 
   def getAabb: AABB = {
-    val p: List[Point] = points
+    val p: Set[Point] = points
     val firstMinMax: (Point, Point) = (point1, point1)
     val (a: Point, b: Point) =
       p.foldLeft(firstMinMax)((minMax, p) => (minMax._1.min(p), minMax._2.max(p)) )

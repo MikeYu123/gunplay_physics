@@ -9,8 +9,10 @@ object PhysicsObjectFactory {
   }
 
   def spawnRect(x: Double, y: Double, side: Double): Rectangle = {
-    Rectangle(Point(x - side / 2, y - side / 2), Point(x - side / 2, y + side / 2),
-      Point(x + side / 2, y + side / 2), Point(x + side / 2, y - side / 2))
+    Rectangle(Point(x - side / 2, y - side / 2),
+      Point(x - side / 2, y + side / 2),
+      Point(x + side / 2, y + side / 2),
+      Point(x + side / 2, y - side / 2))
   }
 
   def spawnPhOb(x: Double, y: Double): PhysicsObject = {

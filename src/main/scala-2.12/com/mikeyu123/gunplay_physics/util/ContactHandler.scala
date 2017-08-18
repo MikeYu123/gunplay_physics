@@ -8,17 +8,18 @@ import scala.collection.Set
 
 object ContactHandler {
 
-  def handle(objs: Set[PhysicsObject]): Set[PhysicsObject] = {
-
+  def handle(objs: Set[PhysicsObject], aabb: AABB, capacity: Int, depth: Int): Set[PhysicsObject] = {
     val updatedObjects = objs.map(_.applyMotion)
+    val tree = QTreeBuilder(objs, aabb, capacity, depth)
+    val aabbContacts = getAabbContacts(tree)
+    val geometryContacts = getGeometryContacts(aabbContacts)
 
     //    val qtree: QTree = QTree(objs, )
     Set()
   }
 
   def getAabbContacts(qTree: QTree): HashSet[Contact] = {
-    val base = HashSet[Contact]()
-    qTree.foldLeft(base) { (setOfContacts, leafObjects) =>
+    qTree.foldLeft(HashSet[Contact]()) { (setOfContacts, leafObjects) =>
       val con = getAabbContactsFromLeaf(leafObjects)
       setOfContacts ++ con
     }
@@ -42,7 +43,7 @@ object ContactHandler {
   }
 
   def getGeometryContacts(aabbContacts: Set[Contact]): Set[Contact] = {
-
+    //TODO
     Set()
   }
 
