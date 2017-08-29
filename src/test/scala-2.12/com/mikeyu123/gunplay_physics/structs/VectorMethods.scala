@@ -21,4 +21,8 @@ class VectorMethods extends GraphicsSpec {
   it should "compare test 0" in {
     Vector(2, 0) == Vector(2, 0) should equal(true)
   }
+
+  it should "subtract test 0" in {
+    Vector(2, 0) - Vector(2, 1) should equal(Vector(0, -1))
+  }
 }

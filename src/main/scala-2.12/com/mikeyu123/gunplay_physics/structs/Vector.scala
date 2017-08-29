@@ -27,6 +27,10 @@ case class Vector(dx: Double, dy: Double) extends Ordered[Vector] {
     Vector(-dx, -dy)
   }
 
+  def -(that: Vector): Vector = {
+    LineSegment(Point(that.dx, that.dy), Point(dx, dy)).toVector
+  }
+
   override def compare(that: Vector): Int = {
     (this * this).compare(that * that)
   }
