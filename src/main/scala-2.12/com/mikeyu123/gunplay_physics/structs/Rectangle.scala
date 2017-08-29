@@ -49,4 +49,10 @@ case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point)
   def debugToString: String = {
     "Rect(" + center.x + ", " + center.y+")"
   }
+
+  def contains(point: Point): Boolean = {
+    val lines = Set(LineSegment(point1, point2), LineSegment(point2, point3))
+    val projection = lines.map(_.projectsOn(point))
+    projection.reduceLeft(_ && _)
+  }
 }

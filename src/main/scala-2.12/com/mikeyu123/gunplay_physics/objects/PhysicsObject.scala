@@ -13,12 +13,12 @@ case class PhysicsObject(shape: GeometryPrimitive, center: Point, properties: Ph
   }
 
   def applyMotion(motion: Motion): PhysicsObject = {
-    this.move(motion.path).rotate(motion.rotation)
+    move(motion.path).rotate(motion.rotation)
   }
 
   def applyMotion: PhysicsObject = {
-    if (this.properties.movable)
-      this.applyMotion(this.properties.motion)
+    if (properties.movable)
+      this.applyMotion(properties.motion)
     else this
   }
 
@@ -36,5 +36,5 @@ case class PhysicsObject(shape: GeometryPrimitive, center: Point, properties: Ph
     PhysicsObject(shape, center, properties.lock(l))
   }
 
-  override def toString: String = this.shape.debugToString
+  override def toString: String = shape.debugToString
 }

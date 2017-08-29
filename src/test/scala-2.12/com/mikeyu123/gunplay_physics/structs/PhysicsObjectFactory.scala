@@ -19,10 +19,14 @@ object PhysicsObjectFactory {
     PhysicsObject(spawnRect(x, y), Point(0, 0), pr)
   }
 
+  def spawnPhOb(x: Double, y: Double, vx: Double, vy: Double): PhysicsObject = {
+    val pr = PhysicsProperties(0, true, false, Set(), Motion(Vector(vx, vy), 0))
+    PhysicsObject(spawnRect(x, y), Point(x, y), pr)
+  }
+
   val pr = PhysicsProperties(0, true, false, Set(), Motion(Vector(0, 0), 0))
 
   def spawnPhOb(d: Double): PhysicsObject = {
-    val pr = PhysicsProperties(0, true, false, Set(), Motion(Vector(0, 0), 0))
     PhysicsObject(GeometryStub(d), Point(d, d), pr)
   }
 

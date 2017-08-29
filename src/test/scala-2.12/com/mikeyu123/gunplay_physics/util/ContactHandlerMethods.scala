@@ -90,4 +90,13 @@ class ContactHandlerMethods extends GraphicsSpec {
         Contact(PhysicsObjectFactory.spawnPhOb(4, 3), PhysicsObjectFactory.spawnPhOb(5, 3), 0))
     }
   }
+
+  it should "handle test" in {
+    val obj0 = PhysicsObjectFactory.spawnPhOb(-1.5, 0, 1, 0)
+    val obj1 = PhysicsObjectFactory.spawnPhOb(0, -1, 0, 0.5)
+    ContactHandler.handle(Set(obj0, obj1), AABB(-2, -2, 2, 2), 4, 4)
+
+  }
+
+
 }

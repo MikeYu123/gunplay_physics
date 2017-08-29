@@ -30,4 +30,14 @@ case class Point(x: Double, y: Double) {
   def max(b: Point): Point = {
     Point(Math.max(x, b.x), Math.max(y, b.y))
   }
+
+  // nearest to point2
+  def nearest(point0: Point, point1: Point): Point = {
+    val v0 = this - point0
+    val v1 = this - point1
+    val l0 = v0 * v0
+    val l1 = v1 * v1
+    if (l0 < l1) point0
+    else point1
+  }
 }

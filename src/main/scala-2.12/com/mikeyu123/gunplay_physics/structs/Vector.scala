@@ -4,7 +4,7 @@ package com.mikeyu123.gunplay_physics.structs
   * Created by mihailurcenkov on 09.07.17.
   */
 
-case class Vector(dx: Double, dy: Double) {
+case class Vector(dx: Double, dy: Double) extends Ordered[Vector] {
   def +(other: Vector) = Vector(dx + other.dx, dy + other.dy)
 
   def *(other: Vector): Double = {
@@ -23,7 +23,11 @@ case class Vector(dx: Double, dy: Double) {
     dx * other.dy - dy * other.dx
   }
 
-  def dot(that: Vector): Double = {
-    this.dx * that.dx + this.dy * that.dy
+  def reverse: Vector = {
+    Vector(-dx, -dy)
+  }
+
+  override def compare(that: Vector): Int = {
+    (this * this).compare(that * that)
   }
 }

@@ -10,7 +10,7 @@ object ContactHandler {
 
   def handle(objs: Set[PhysicsObject], aabb: AABB, capacity: Int, depth: Int): Set[PhysicsObject] = {
     val updatedObjects = objs.map(_.applyMotion)
-    val tree = QTreeBuilder(objs, aabb, capacity, depth)
+    val tree = QTreeBuilder(updatedObjects, aabb, capacity, depth)
     val aabbContacts = getAabbContacts(tree)
     val geometryContacts = getGeometryContacts(aabbContacts)
 
@@ -43,23 +43,25 @@ object ContactHandler {
   }
 
   def getGeometryContacts(aabbContacts: Set[Contact]): Set[Contact] = {
-    //TODO
-    Set()
+    aabbContacts.filter(IntersectionDetector.intersects)
   }
 
-  def subtract(set: Set[PhysicsObject], obj: PhysicsObject): Set[PhysicsObject] = {
-    if (set.head == obj) set.tail
-    else
-      subtract(set.tail, obj)
+  def subtract(list: List[PhysicsObject], obj: PhysicsObject): List[PhysicsObject] = {
+    list.head match{
+      case `obj` => list.tail
+      case _ => subtract(list.tail, obj)
+    }
   }
 
   def getCombinations(set: Set[PhysicsObject]): Set[Tuple2[PhysicsObject, PhysicsObject]] = {
-    for {
-      phob0 <- set
-      subset = subtract(set, phob0)
+    val list  = set.toList
+    val pairs = for {
+      phob0 <- list
+      subset = subtract(list, phob0)
       phob1 <- subset
     } yield
       (phob0, phob1)
+    pairs.toSet
   }
 
 }
