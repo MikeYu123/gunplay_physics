@@ -1,6 +1,7 @@
 package com.mikeyu123.gunplay_physics.structs
 
 import com.mikeyu123.gunplay_physics.objects.PhysicsObject
+import com.mikeyu123.gunplay_physics.structs.ObjectType._
 
 object PhysicsObjectFactory {
 
@@ -20,11 +21,11 @@ object PhysicsObjectFactory {
   }
 
   def spawnPhOb(x: Double, y: Double, vx: Double, vy: Double): PhysicsObject = {
-    val pr = PhysicsProperties(0, true, false, Set(), Motion(Vector(vx, vy), 0))
+    val pr = PhysicsProperties(0, movable, Motion(Vector(vx, vy), 0))
     PhysicsObject(spawnRect(x, y), Point(x, y), pr)
   }
 
-  val pr = PhysicsProperties(0, true, false, Set(), Motion(Vector(0, 0), 0))
+  val pr = PhysicsProperties(0, movable, Motion(Vector(0, 0), 0))
 
   def spawnPhOb(d: Double): PhysicsObject = {
     PhysicsObject(GeometryStub(d), Point(d, d), pr)

@@ -1,19 +1,17 @@
 package com.mikeyu123.gunplay_physics.structs
 
-case class PhysicsProperties(contactGroup: Int, movable: Boolean, locked: Boolean,
-                             contacts: Set[Contact], motion: Motion) {
+import com.mikeyu123.gunplay_physics.structs.ObjectType.ObjectType
 
-  def lock(l: Boolean): PhysicsProperties = {
-    PhysicsProperties(contactGroup, movable, l, contacts, motion)
-  }
+object ObjectType extends Enumeration {
+  type ObjectType = Value
+  val movable, immovable, static = Value
+}
+
+case class PhysicsProperties(contactGroup: Int, objectType: ObjectType, motion: Motion) {
 
   def setMotion(motion: Motion): PhysicsProperties = {
-    PhysicsProperties(contactGroup, movable, locked, contacts, motion)
+    PhysicsProperties(contactGroup, objectType, motion)
   }
 
-  def addContact(contact: Contact): PhysicsProperties = {
-    PhysicsProperties(contactGroup, movable, locked, contacts + contact, motion)
-  }
-
-//  def emptyContact
+  //  def emptyContact
 }

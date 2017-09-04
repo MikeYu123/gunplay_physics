@@ -15,18 +15,22 @@ state:
  */
 object Contact {
   def apply(a: PhysicsObject, b: PhysicsObject): Contact =
-    Contact(Set(a, b), Point(0, 0), LineSegment(Point(0, 0), Point(0, 0)), -1)
+    Contact(Set(a, b), Vector(0, 0))
 
-  def apply(a: PhysicsObject, b: PhysicsObject, state: Int): Contact =
-    Contact(Set(a, b), Point(0, 0), LineSegment(Point(0, 0), Point(0, 0)), state)
+  //def apply(a: PhysicsObject, b: PhysicsObject, state: Int): Contact =
+  //Contact(Set(a, b),  LineSegment(Point(0, 0), Point(0, 0)), state)
 }
 
-case class Contact(ab: Set[PhysicsObject], contactPoint: Point, normal: LineSegment, state: Int) {
+case class Contact(ab: Set[PhysicsObject], normal: Vector) {
   def a: PhysicsObject = {
     ab.head
   }
 
   def b: PhysicsObject = {
     ab.last
+  }
+
+  def setNormal(vector: Vector): Contact = {
+    Contact(ab, vector)
   }
 }

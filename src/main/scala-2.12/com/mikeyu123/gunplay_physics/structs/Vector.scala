@@ -28,7 +28,24 @@ case class Vector(dx: Double, dy: Double) extends Ordered[Vector] {
   }
 
   def -(that: Vector): Vector = {
-    LineSegment(Point(that.dx, that.dy), Point(dx, dy)).toVector
+    Vector(dx - that.dx, dy - that.dy)
+  }
+
+  def compareProjection(that: Vector): Double = {
+    val n = this * this
+    val d = this * that
+    d match {
+      case 0 => Double.PositiveInfinity
+      case _ => math.abs(n / d)
+    }
+  }
+
+  def isZero: Boolean = {
+    dx == 0 && dy == 0
+  }
+
+  def normalize: Vector = {
+    this / math.sqrt(this * this)
   }
 
   override def compare(that: Vector): Int = {

@@ -49,7 +49,7 @@ class ContactHandlerMethods extends GraphicsSpec {
     val b = PhysicsObjectFactory.spawnPhOb(1, 1)
     val con: Option[Contact] = ContactHandler.aabbContact(a, b)
     con.getOrElse(0) should equal {
-      Contact(a, b, 0)
+      Contact(a, b)
     }
   }
 
@@ -69,7 +69,7 @@ class ContactHandlerMethods extends GraphicsSpec {
     val set = Set(a, b, c)
     val res = ContactHandler.getAabbContactsFromLeaf(set)
     res should equal {
-      Set(Contact(a, b, 0))
+      Set(Contact(a, b))
     }
   }
 
@@ -86,8 +86,8 @@ class ContactHandlerMethods extends GraphicsSpec {
     val n = tree.nodes
     val res: HashSet[Contact] = ContactHandler.getAabbContacts(tree)
     res should equal {
-      HashSet(Contact(PhysicsObjectFactory.spawnPhOb(1, 1), PhysicsObjectFactory.spawnPhOb(2, 1), 0),
-        Contact(PhysicsObjectFactory.spawnPhOb(4, 3), PhysicsObjectFactory.spawnPhOb(5, 3), 0))
+      HashSet(Contact(PhysicsObjectFactory.spawnPhOb(1, 1), PhysicsObjectFactory.spawnPhOb(2, 1)),
+        Contact(PhysicsObjectFactory.spawnPhOb(4, 3), PhysicsObjectFactory.spawnPhOb(5, 3)))
     }
   }
 

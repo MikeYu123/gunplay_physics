@@ -25,4 +25,24 @@ class VectorMethods extends GraphicsSpec {
   it should "subtract test 0" in {
     Vector(2, 0) - Vector(2, 1) should equal(Vector(0, -1))
   }
+
+  it should "compare projection test 0" in {
+    Vector(2, 0).compareProjection(Vector(1, 1)) should equal(2)
+  }
+
+  it should "is zero test 0" in {
+    Vector(2, 0).isZero should equal(false)
+  }
+
+  it should "is zero test 1" in {
+    Vector(0, 0).isZero should equal(true)
+  }
+
+  it should "compare projection test 1" in {
+    Vector(2, 0).compareProjection(Vector(4, 1)) should equal(1.0 / 2.0)
+  }
+
+  it should "normalize test 0" in {
+    Vector(2, 0).normalize should equal(Vector(1, 0))
+  }
 }

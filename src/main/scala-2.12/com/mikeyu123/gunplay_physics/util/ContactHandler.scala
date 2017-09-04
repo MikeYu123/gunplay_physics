@@ -14,7 +14,6 @@ object ContactHandler {
     val aabbContacts = getAabbContacts(tree)
     val geometryContacts = getGeometryContacts(aabbContacts)
 
-    //    val qtree: QTree = QTree(objs, )
     Set()
   }
 
@@ -38,7 +37,7 @@ object ContactHandler {
 
   def aabbContact(a: PhysicsObject, b: PhysicsObject): Option[Contact] = {
     if (a.getAabb.intersects(b.getAabb))
-      Option[Contact](Contact(a, b, 0))
+      Option[Contact](Contact(a, b))
     else None
   }
 

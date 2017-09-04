@@ -74,7 +74,7 @@ case class LineSegment(start: Point, end: Point) {
 
   def direction(point: Point): Double = {
     val (v0, v1) = (toVector, point - start)
-    v0.dx * v1.dy - v0.dy * v1.dx
+    v0.pseudoScalar(v1)
   }
 
   def intersects(lineSegment: LineSegment): Boolean = {
