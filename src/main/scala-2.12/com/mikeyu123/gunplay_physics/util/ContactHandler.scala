@@ -13,6 +13,8 @@ object ContactHandler {
     val tree = QTreeBuilder(updatedObjects, aabb, capacity, depth)
     val aabbContacts = getAabbContacts(tree)
     val geometryContacts = getGeometryContacts(aabbContacts)
+    val solutions = geometryContacts.map(ContactSolver.solve).reduceLeft(_ ++ _)
+
 
     Set()
   }
@@ -46,14 +48,14 @@ object ContactHandler {
   }
 
   def subtract(list: List[PhysicsObject], obj: PhysicsObject): List[PhysicsObject] = {
-    list.head match{
+    list.head match {
       case `obj` => list.tail
       case _ => subtract(list.tail, obj)
     }
   }
 
   def getCombinations(set: Set[PhysicsObject]): Set[Tuple2[PhysicsObject, PhysicsObject]] = {
-    val list  = set.toList
+    val list = set.toList
     val pairs = for {
       phob0 <- list
       subset = subtract(list, phob0)
@@ -62,5 +64,4 @@ object ContactHandler {
       (phob0, phob1)
     pairs.toSet
   }
-
 }

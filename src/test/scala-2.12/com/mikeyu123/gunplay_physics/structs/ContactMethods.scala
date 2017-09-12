@@ -75,4 +75,68 @@ class ContactMethods extends GraphicsSpec {
     val t1 = System.nanoTime()
     "Elapsed time: " + (t1 - t0) + "ns "
   }
+
+  it should "ab order test 00" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(1)
+    val c = Contact(m0, m1)
+    c.a should equal(m0)
+  }
+
+  it should "ab order test 01" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0)
+    val m1 = PhysicsObjectFactory.spawnImOb(1)
+    val c = Contact(m0, m1)
+    c.a should equal(m0)
+  }
+
+  it should "ab order test 02" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0)
+    val m1 = PhysicsObjectFactory.spawnStOb(1)
+    val c = Contact(m0, m1)
+    c.a should equal(m0)
+  }
+
+  it should "ab order test 10" in {
+    val m0 = PhysicsObjectFactory.spawnImOb(0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(1)
+    val c = Contact(m0, m1)
+    c.a should equal(m1)
+  }
+
+  it should "ab order test 11" in {
+    val m0 = PhysicsObjectFactory.spawnImOb(0)
+    val m1 = PhysicsObjectFactory.spawnImOb(1)
+    val c = Contact(m0, m1)
+    c.a should equal(m0)
+  }
+
+  it should "ab order test 12" in {
+    val m0 = PhysicsObjectFactory.spawnImOb(0)
+    val m1 = PhysicsObjectFactory.spawnStOb(1)
+    val c = Contact(m0, m1)
+    c.a should equal(m0)
+  }
+
+  it should "ab order test 20" in {
+    val m0 = PhysicsObjectFactory.spawnStOb(0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(1)
+    val c = Contact(m0, m1)
+    c.a should equal(m1)
+  }
+
+  it should "ab order test 21" in {
+    val m0 = PhysicsObjectFactory.spawnStOb(0)
+    val m1 = PhysicsObjectFactory.spawnImOb(1)
+    val c = Contact(m0, m1)
+    c.a should equal(m1)
+  }
+
+  it should "ab order test 22" in {
+    val m0 = PhysicsObjectFactory.spawnStOb(0)
+    val m1 = PhysicsObjectFactory.spawnStOb(1)
+    val c = Contact(m0, m1)
+    c.a should equal(m0)
+  }
+
 }

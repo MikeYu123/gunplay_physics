@@ -1,6 +1,6 @@
 package com.mikeyu123.gunplay_physics.structs
 
-import com.mikeyu123.gunplay_physics.objects.PhysicsObject
+import com.mikeyu123.gunplay_physics.objects.{ImmovableObject, MovableObject, PhysicsObject, StaticObject}
 
 //import scala.runtime.Statics
 import scala.util.hashing.MurmurHash3
@@ -22,13 +22,21 @@ object Contact {
 }
 
 case class Contact(ab: Set[PhysicsObject], normal: Vector) {
-  def a: PhysicsObject = {
-    ab.head
+
+  val (a, b) = (ab.head, ab.last) match {
+    case (a: ImmovableObject, b: MovableObject) => (b, a)
+    case (a: StaticObject, b: MovableObject) => (b, a)
+    case (a: StaticObject, b: ImmovableObject) => (b, a)
+    case (a, b) => (a, b)
   }
 
-  def b: PhysicsObject = {
-    ab.last
-  }
+//  def a: PhysicsObject = {
+//    ab.head
+//  }
+//
+//  def b: PhysicsObject = {
+//    ab.last
+//  }
 
   def setNormal(vector: Vector): Contact = {
     Contact(ab, vector)
