@@ -34,6 +34,10 @@ object PhysicsObjectFactory {
     ImmovableObject(GeometryStub(d), Point(d, d), pr)
   }
 
+  def spawnImOb(x: Double, y: Double): PhysicsObject = {
+    ImmovableObject(spawnRect(x, y), Point(x, y), pr)
+  }
+
   def spawnStOb(d: Double): PhysicsObject = {
     StaticObject(GeometryStub(d), Point(d, d), pr)
   }

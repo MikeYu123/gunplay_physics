@@ -13,8 +13,8 @@ object ContactHandler {
     val tree = QTreeBuilder(updatedObjects, aabb, capacity, depth)
     val aabbContacts = getAabbContacts(tree)
     val geometryContacts = getGeometryContacts(aabbContacts)
-    val solutions = geometryContacts.map(ContactSolver.solve).reduceLeft(_ ++ _)
-
+    //    val solutions = geometryContacts.map(ContactSolver.solve).reduceLeft(_ ++ _)
+    val correctionQueue = getCorrectionsQueue(geometryContacts)
 
     Set()
   }
@@ -63,5 +63,10 @@ object ContactHandler {
     } yield
       (phob0, phob1)
     pairs.toSet
+  }
+
+  def getCorrectionsQueue(geometryContacts: Set[Contact]): CorrectionQueue = {
+    val corrections = geometryContacts.map(ContactSolver.solve).reduceLeft(_ ++ _)
+    CorrectionQueue(corrections)
   }
 }

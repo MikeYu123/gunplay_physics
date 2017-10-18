@@ -9,31 +9,6 @@ abstract class PhysicsObject {
   val shape: GeometryPrimitive
   val center: Point
   val properties: PhysicsProperties
-  //  def move(vector: Vector): PhysicsObject = {
-  //    PhysicsObject(shape.move(vector), center + vector, properties)
-  //  }
-  //
-  //  def rotate(degrees: Double): PhysicsObject = {
-  //    PhysicsObject(shape.rotate(center, degrees), center, properties)
-  //  }
-  //
-  //  def applyMotion(motion: Motion): PhysicsObject = {
-  //    move(motion.path).rotate(motion.rotation)
-  //  }
-  //
-  //  def applyMotion: PhysicsObject = {
-  //    properties.objectType match {
-  //      case ObjectType.static => this
-  //      case _ => this.applyMotion(properties.motion)
-  //    }
-  //  }
-  //
-  //  def setMotion(motion: Motion): PhysicsObject = {
-  //    properties.objectType match {
-  //      case ObjectType.static => this
-  //      case _ => PhysicsObject(shape, center, properties.setMotion(motion))
-  //    }
-  //  }
 
   def move(vector: Vector): PhysicsObject
 
@@ -43,8 +18,18 @@ abstract class PhysicsObject {
 
   def applyMotion: PhysicsObject
 
+  def setMotion(motion: Motion): PhysicsObject
+
+  def setMotion(path: Vector): PhysicsObject = {
+    setMotion(Motion(path, properties.motion.rotation))
+  }
+
   def getAabb: AABB = {
     shape.getAabb
+  }
+
+  def revert(time: Double): PhysicsObject = {
+    move(properties.motion.path.reverse * time)
   }
 
   override def toString: String = shape.debugToString

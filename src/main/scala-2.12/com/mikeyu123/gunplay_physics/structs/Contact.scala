@@ -41,4 +41,8 @@ case class Contact(ab: Set[PhysicsObject], normal: Vector) {
   def setNormal(vector: Vector): Contact = {
     Contact(ab, vector)
   }
+
+  def other(physicsObject: PhysicsObject): PhysicsObject ={
+    ab.filter(!physicsObject.equals(_)).head
+  }
 }

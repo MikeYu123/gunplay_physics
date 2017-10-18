@@ -40,22 +40,6 @@ object ContactSolver {
       case (_: StaticObject, _: StaticObject) =>
         Set()
 
-      //      case (aa: StaticObject, bb: ImmovableObject) =>
-      //        Set(ContactQueueEntry(b, Correction(contact, b.properties.motion.path, 0)))
-      //      case (aa: StaticObject, bb: MovableObject) => {
-      //        val contactTime = getContactTime(a, b)
-      //        val afterContactPathB = contactTime._2 * (contactTime._1 * (b.properties.motion.path * contactTime._2))
-      //        val newContact = contact.setNormal(contactTime._2)
-      //        Set(ContactQueueEntry(b, Correction(newContact, afterContactPathB, contactTime._1)))
-      //      }
-      //      case (aa: ImmovableObject, bb: MovableObject) => {
-      //        val contactTime = getContactTime(a, b)
-      //        val afterContactPathB = contactTime._2 * (contactTime._1 * (b.properties.motion.path * contactTime._2))
-      //        val newContact = contact.setNormal(contactTime._2)
-      //        Set(ContactQueueEntry(a, Correction(newContact, a.properties.motion.path, 0)),
-      //          ContactQueueEntry(b, Correction(newContact, afterContactPathB, contactTime._1)))
-      //      }
-
       case _ => Set()
     }
   }
@@ -63,15 +47,13 @@ object ContactSolver {
   def getContactTime(a: PhysicsObject, b: PhysicsObject): (Double, Vector) = {
     val correctionVectorA = getCorrectionVector(a, b)
     val correctionVectorB = getCorrectionVector(b, a)
-    //    val covergence = a.properties.motion.path - b.properties.motion.path
-    val covergence = (a, b) match {
+    val convergence = (a, b) match {
       case (_: MovableObject, _: ImmovableObject) => a.properties.motion.path
       case _ => a.properties.motion.path - b.properties.motion.path
     }
 
-
-    val projectionA = (correctionVectorA._1.compareProjection(covergence), correctionVectorA._2)
-    val projectionB = (correctionVectorB._1.compareProjection(covergence), correctionVectorB._2)
+    val projectionA = getProjection(correctionVectorA, convergence)
+    val projectionB = getProjection(correctionVectorB, convergence)
     val res = if (projectionA._1 < projectionB._1) projectionA else projectionB
     res
   }
@@ -128,6 +110,18 @@ object ContactSolver {
         if (a._1 > b._1) a else b
       }
       case _ => (Vector(0, 0), Vector(0, 0))
+    }
+  }
+
+  def getProjection(correctionVector: Tuple2[Vector, Vector], convergence: Vector): Tuple2[Double, Vector] = {
+    getProjection(correctionVector._1, convergence, correctionVector._2)
+  }
+
+  def getProjection(correctionVector: Vector, convergence: Vector, normal: Vector): Tuple2[Double, Vector] = {
+    val time = correctionVector.compareProjection(convergence)
+    (time.isInfinite, normal.isZero) match {
+      case (true, false) => (0, normal)
+      case _ => (time, normal)
     }
   }
 }

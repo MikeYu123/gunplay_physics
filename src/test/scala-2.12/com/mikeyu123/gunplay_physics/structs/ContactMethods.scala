@@ -139,4 +139,11 @@ class ContactMethods extends GraphicsSpec {
     c.a should equal(m0)
   }
 
+  it should "other test 0" in {
+    val m0 = PhysicsObjectFactory.spawnStOb(0)
+    val m1 = PhysicsObjectFactory.spawnStOb(1)
+    val c = Contact(m0, m1)
+    c.other(m0) should equal(m1)
+  }
+
 }
