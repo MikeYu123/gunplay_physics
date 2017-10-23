@@ -18,51 +18,79 @@ object CorrectionQueue {
 
 case class CorrectionQueue(map: Map[PhysicsObject, SortedSet[Correction]]) {
 
-  //  def getMultipleCorrections: Map[PhysicsObject, SortedSet[Correction]] = {
-  //    map.filter(_._2.size > 1)
-  //  }
-
-//  def add(correctionQueueEntry: CorrectionQueueEntry): CorrectionQueue={
-//    CorrectionQueue(map.updated(correctionQueueEntry.physicsObject, SortedSet(correctionQueueEntry.correction)))
-//  }
-
   def getMultipleCorrections: Set[PhysicsObject] = {
     map.filter(_._2.size > 1).keySet
   }
 
+  def update(correctionQueueEntry: CorrectionQueueEntry): CorrectionQueue = {
+    val set = map(correctionQueueEntry.physicsObject)
+    val newSet = set.find(_.related(correctionQueueEntry.correction)) match {
+      case c: Some[Correction] =>
+        set - c.get + correctionQueueEntry.correction
+      case _ => set
+
+    }
+    CorrectionQueue(map.updated(correctionQueueEntry.physicsObject, newSet))
+  }
+
+  def updated(physicsObject: PhysicsObject, corrections: SortedSet[Correction]): CorrectionQueue = {
+    CorrectionQueue(map.updated(physicsObject, corrections))
+  }
+
   def applyCorrections: Set[PhysicsObject] = {
-    //    map.map{pair=>
-    //      pair._2._1.move()
-    //    }
+
     Set()
   }
 
   def mergeCorrections: CorrectionQueue = {
     val mults = getMultipleCorrections
-    mults.foreach {
-      phOb =>
-
-    }
-    new CorrectionQueue(Map())
+//    mults.foldLeft(this){
+//      (queue:CorrectionQueue, phOb)=>
+//        queue.mergeCorrections(phOb)
+//    }
+    mults.foldLeft(this)(_.mergeCorrections(_))
   }
 
   def mergeCorrections(physicsObject: PhysicsObject): CorrectionQueue = {
     val corrs = map(physicsObject)
-    corrs.reduceLeft {
-      (res: Correction, corr: Correction) =>
-        val newOb = physicsObject.revert(res.contactTime).setMotion(res.afterContactPath)
-        val other = corr.contact.other(physicsObject)
-        val newContact = Contact(newOb, other)
-        val correctionEntries = ContactSolver.solve(newContact)
+    val corrsArray = corrs.toArray
+    val newEntries = corrsArray.foldLeft(Set[CorrectionQueueEntry]()) {
+      (res: Set[CorrectionQueueEntry], corr: Correction) =>
+        val index = corrsArray.indexOf(corr)
+        index match {
+          case 0 =>
+            val newOb = corr.correct(physicsObject).setMotion(corr.afterContactPath)
+            res + CorrectionQueueEntry(newOb, corr)
+          case _ =>
+            val previousCorr = corrsArray(index - 1)
+            val previousEntry = res.find(_.correction.equals(previousCorr)).get
+            val previousObject = previousEntry.physicsObject
 
-//        correctionEntries.size match {
-//          case 2 =>
-//            val
-//        }
+            val otherObject = corr.contact.other(physicsObject)
+            val newContact = Contact(previousObject, otherObject)
 
+            val correctionEntries = ContactSolver.solve(newContact)
+            val newCorrection = correctionEntries.find(_.physicsObject.equals(previousObject)).get
+            val otherCorrection = correctionEntries - newCorrection
 
+            val newObject = newCorrection.correction.correct(previousObject).setMotion(newCorrection.correction.afterContactPath)
+
+            res - previousEntry ++ otherCorrection + CorrectionQueueEntry(newObject, corr)
+        }
     }
+    val newEntry = newEntries.find(_.physicsObject.id.equals(physicsObject.id)).get
 
-    this
+    val otherEntries = newEntries - newEntry
+
+    val delta = newEntry.physicsObject.center - physicsObject.center
+    val newCorrection = Correction(newEntry.correction.contact, delta, 0)
+    val newSet = SortedSet[Correction](newCorrection)
+
+    val newQueue = otherEntries.foldLeft(this) {
+      (queue, entry) =>
+        queue.update(entry)
+    }.updated(physicsObject, newSet)
+
+    newQueue
   }
 }

@@ -1,5 +1,7 @@
 package com.mikeyu123.gunplay_physics.objects
 
+import java.util.UUID
+
 import com.mikeyu123.gunplay_physics.structs._
 
 
@@ -9,6 +11,9 @@ abstract class PhysicsObject {
   val shape: GeometryPrimitive
   val center: Point
   val properties: PhysicsProperties
+
+  val id: UUID
+
 
   def move(vector: Vector): PhysicsObject
 

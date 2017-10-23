@@ -9,11 +9,19 @@ case class Correction(contact: Contact, afterContactPath: Vector, contactTime: D
   }
 
   def correct(physicsObject: PhysicsObject): PhysicsObject = {
-    val path = physicsObject.properties.motion.path * (1.0 - contactTime) + afterContactPath
+    val path = physicsObject.properties.motion.path * (-contactTime) + afterContactPath
     physicsObject.move(path)
   }
 
-  def related(that: Correction): Boolean ={
-    contact.ab.equals(that.contact.ab)
+  def related(that: Correction): Boolean = {
+    contact.a.id.equals(that.contact.a.id) match {
+      case true =>
+        contact.b.id.equals(that.contact.b.id)
+      case _ => false
+    }
+  }
+
+  def swapSubject(old: PhysicsObject, next: PhysicsObject): Correction = {
+    Correction(contact.swapSubject(old, next), afterContactPath, contactTime)
   }
 }

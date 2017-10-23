@@ -24,9 +24,12 @@ class CorrectionQueueMethods extends GraphicsSpec {
 
     val queue = ContactHandler.getCorrectionsQueue(set)
 
+    val q = queue.mergeCorrections(obj1)
+    val q0 = queue.mergeCorrections
+
     val mult = queue.getMultipleCorrections
 
-    print(0)
+//    print("0000")
   }
 
 }
