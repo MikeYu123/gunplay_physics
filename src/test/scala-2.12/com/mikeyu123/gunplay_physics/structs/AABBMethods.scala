@@ -3,7 +3,7 @@ package com.mikeyu123.gunplay_physics.structs
 import com.mikeyu123.gunplay_physics.GraphicsSpec
 import org.scalatest.Matchers._
 
-class AABBMethods extends GraphicsSpec{
+class AABBMethods extends GraphicsSpec {
 
   it should "render correct AABB divicion" in {
     AABB(Point(0, 0), Point(8, 8)).divide should equal(
@@ -63,5 +63,12 @@ class AABBMethods extends GraphicsSpec{
     AABB(Point(0, 0), Point(2, 2)).intersects(AABB(Point(0, 3), Point(2, 5))) should equal(
       false
     )
+  }
+
+  it should "+ test 0" in {
+    val aabb0 = AABB(0, 0, 2, 2)
+    val aabb1 = AABB(1, -1, 3, 1)
+    val res = aabb0 + aabb1
+    res should equal(AABB(0, -1, 3, 2))
   }
 }

@@ -5,6 +5,7 @@ object AABB {
 }
 
 case class AABB(leftBottom: Point, rightTop: Point) {
+
   def divide: Set[AABB] = {
     val divisionPoint: Point = getCenter
     val q1: AABB = AABB(divisionPoint, rightTop)
@@ -13,16 +14,6 @@ case class AABB(leftBottom: Point, rightTop: Point) {
     val q4: AABB = AABB(Point(divisionPoint.x, leftBottom.y), Point(rightTop.x, divisionPoint.y))
     Set[AABB](q1, q2, q3, q4)
   }
-
-  //  def intersects(b: AABB): Boolean = {
-  //    val lt: Point = Point(left_bottom.x, right_top.y)
-  //    val rb: Point = Point(right_top.x, left_bottom.y)
-  //    val points: List[Point] = List(right_top, lt, left_bottom, rb)
-  //    points.exists{p =>
-  //      (p.x <= b.right_top.x) && (p.x >= b.left_bottom.x) &&
-  //        (p.y <= b.right_top.y) && (p.y >= b.left_bottom.y)
-  //    }
-  //  }
 
   def getCenter: Point = {
     Point((rightTop.x + leftBottom.x) / 2, (rightTop.y + leftBottom.y) / 2)
@@ -44,5 +35,9 @@ case class AABB(leftBottom: Point, rightTop: Point) {
     val (dx: Double, dy: Double) = (math.abs(c1.x - c2.x), math.abs(c1.y - c2.y))
     val Vector(dw: Double, dh: Double) = (diagonal + b.diagonal) / 2
     (dx <= dw) && (dy <= dh)
+  }
+
+  def +(other: AABB): AABB={
+    AABB(leftBottom.min(other.leftBottom), rightTop.max(other.rightTop))
   }
 }

@@ -85,15 +85,39 @@ class ContactHandlerMethods extends GraphicsSpec {
     val tree: QTree = qtreeSetup
     val n = tree.nodes
     val res: HashSet[Contact] = ContactHandler.getAabbContacts(tree)
-    val reqRes =  HashSet(Contact(PhysicsObjectFactory.spawnPhOb(1, 1), PhysicsObjectFactory.spawnPhOb(2, 1)),
+    val reqRes = HashSet(Contact(PhysicsObjectFactory.spawnPhOb(1, 1), PhysicsObjectFactory.spawnPhOb(2, 1)),
       Contact(PhysicsObjectFactory.spawnPhOb(5, 3), PhysicsObjectFactory.spawnPhOb(4, 3)))
-//    res should equal { reqRes }
+    //    res should equal { reqRes }
   }
 
   it should "handle test" in {
-    val obj0 = PhysicsObjectFactory.spawnPhOb(-1.5, 0, 1, 0)
-    val obj1 = PhysicsObjectFactory.spawnPhOb(0, -1, 0, 0.5)
-    ContactHandler.handle(Set(obj0, obj1), AABB(-2, -2, 2, 2), 4, 4)
+
+    val contactListener = new ContactListener {
+      override def preSolve(contact: Contact): Contact = {
+        contact.ab.exists(_.properties.motion.path == Vector(0, -1)) && contact.ab.exists(_.properties.motion.path == Vector(1, 0))
+        match {
+          case true =>
+            contact.a.properties.motion.path == Vector(0, -1) match {
+              case true =>
+                contact.removeA
+              case _ => contact.removeB
+            }
+          case _ => contact
+        }
+
+        //        contact
+      }
+
+      override def postSolve(contact: Contact): Contact
+
+      = contact
+    }
+    val obj0 = PhysicsObjectFactory.spawnPhOb(0, 0, 1, 0)
+    val obj1 = PhysicsObjectFactory.spawnPhOb(0, 1, 0, -1)
+    val obj2 = PhysicsObjectFactory.spawnPhOb(1.5, 0, -1, 0)
+    val objs = Set(obj0, obj1, obj2)
+    val res = ContactHandler.handle(objs, AABB(-3, -3, 3, 3), 4, 4, contactListener)
+
   }
 
 

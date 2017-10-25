@@ -37,17 +37,26 @@ case class CorrectionQueue(map: Map[PhysicsObject, SortedSet[Correction]]) {
     CorrectionQueue(map.updated(physicsObject, corrections))
   }
 
-  def applyCorrections: Set[PhysicsObject] = {
+  def isFlat: Boolean = {
+    !map.values.exists(_.size != 1)
+  }
 
-    Set()
+  def applyCorrections: Set[PhysicsObject] = {
+    isFlat match {
+      case true =>
+        map.map {
+          (pair) =>
+            val physicsObject = pair._1
+            val correction = pair._2.head
+            correction.correct(physicsObject)
+        }.toSet
+      case _ =>
+        Set()
+    }
   }
 
   def mergeCorrections: CorrectionQueue = {
     val mults = getMultipleCorrections
-//    mults.foldLeft(this){
-//      (queue:CorrectionQueue, phOb)=>
-//        queue.mergeCorrections(phOb)
-//    }
     mults.foldLeft(this)(_.mergeCorrections(_))
   }
 
