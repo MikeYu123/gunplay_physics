@@ -118,6 +118,8 @@ class ContactHandlerMethods extends GraphicsSpec {
     val objs = Set(obj0, obj1, obj2)
     val res = ContactHandler.handle(objs, AABB(-3, -3, 3, 3), 4, 4, contactListener)
 
+    res.size should equal (2)
+//    print(0)
   }
 
 

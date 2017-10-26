@@ -28,10 +28,13 @@ case class Scene(objects: Set[PhysicsObject], properties: SceneProperties, conta
     }
   }
 
+  def setObjects(newObjects: Set[PhysicsObject]): Scene={
+    Scene(newObjects, properties,contactListener)
+  }
+
   def step: Scene = {
     val aabb = objects.map(_.getAabb).reduceLeft(_+_)
     val newObjects = ContactHandler.handle(objects, aabb, properties.capacity, properties.depth, contactListener)
-
-    this
+    setObjects(newObjects)
   }
 }

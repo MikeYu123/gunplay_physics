@@ -1,7 +1,7 @@
 package com.mikeyu123.gunplay_physics.structs
 
 import com.mikeyu123.gunplay_physics.objects.PhysicsObject
-import scala.collection.{Set, Iterable}
+//import scala.collection.{Set, Iterable}
 
 case class QTree(objs: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, capacity: Int, depth: Int) extends Iterable[Set[PhysicsObject]] {
 

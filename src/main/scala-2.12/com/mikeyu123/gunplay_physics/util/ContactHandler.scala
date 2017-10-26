@@ -6,7 +6,7 @@ import com.mikeyu123.gunplay_physics.objects.PhysicsObject
 import com.mikeyu123.gunplay_physics.structs._
 
 import scala.collection.immutable.HashSet
-import scala.collection.Set
+//import scala.collection.Set
 
 object ContactHandler {
 
@@ -17,15 +17,14 @@ object ContactHandler {
     val geometryContacts = getGeometryContacts(aabbContacts)
 
     val presolvedContacts = geometryContacts.map(contactListener.preSolve)
-    val filteredContacts = filterContacts(presolvedContacts)
+    val (filteredContacts, removedObjects) = filterContacts(presolvedContacts)
 
-    //    val correctionQueue = getCorrectionsQueue(geometryContacts)
     val correctionQueue = getCorrectionsQueue(filteredContacts)
     val correctedObjects = correctionQueue.mergeCorrections.applyCorrections
-    val mergedObjects = mergeUpdates(updatedObjects, correctedObjects)
-
-    //TODO: postSolve
-    mergedObjects
+    val (mergedObjects, updatedContacts) = mergeUpdates(updatedObjects, correctedObjects, removedObjects, filteredContacts)
+    val postsolvedContacts = updatedContacts.map(contactListener.postSolve)
+    val finalObjects = mergeUpdates(mergedObjects, postsolvedContacts)
+    finalObjects
   }
 
   def getAabbContacts(qTree: QTree): HashSet[Contact] = {
@@ -78,8 +77,12 @@ object ContactHandler {
     val corrections = geometryContacts.map(ContactSolver.solve).reduceLeft(_ ++ _)
     CorrectionQueue(corrections)
   }
+//
+//  def filterContacts(contacts: Set[Contact], objects: Set[PhysicsObject]):Set[PhysicsObject]={
+//
+//  }
 
-  def filterContacts(contacts: Set[Contact]): Set[Contact] = {
+  def filterContacts(contacts: Set[Contact]): (Set[Contact], Set[UUID]) = {
     val objectMap = contacts.foldLeft(Map[UUID, Set[Contact]]()) {
       (map, contact) =>
         contact.ab.foldLeft(map) {
@@ -104,17 +107,43 @@ object ContactHandler {
         set -- objectMap(key)
     }
 
-    clearedContacts.filter(_.state >= 0)
+    (clearedContacts.filter(_.state >= 0), removedObjects)
   }
 
-  def mergeUpdates(objects: Set[PhysicsObject], updated: Set[PhysicsObject]): Set[PhysicsObject] = {
+  def mergeUpdates(objects: Set[PhysicsObject], contacts: Set[Contact]):Set[PhysicsObject]={
+    val removedObjects = contacts.filter(_.state <= -2).map {
+      contact =>
+        contact.state match {
+          case -2 => contact.a.id
+          case _ => contact.b.id
+        }
+    }
     val map: Map[UUID, PhysicsObject] = objects.map {
       obj =>
         (obj.id, obj)
     }.toMap
-    updated.foldLeft(map) {
+
+    (map -- removedObjects).values.toSet
+  }
+
+  def mergeUpdates(objects: Set[PhysicsObject], updated: Set[PhysicsObject], removed: Set[UUID], contacts: Set[Contact]):
+  (Set[PhysicsObject], Set[Contact]) = {
+    val map: Map[UUID, PhysicsObject] = objects.map {
+      obj =>
+        (obj.id, obj)
+    }.toMap
+
+    val mergedObjects = updated.foldLeft(map) {
       (objs, obj) =>
         objs.updated(obj.id, obj)
-    }.values.toSet
+    }
+    val finalObjects = mergedObjects -- removed
+    val updatedContacts = contacts.map {
+      contact =>
+        val a = finalObjects(contact.a.id)
+        val b = finalObjects(contact.b.id)
+        Contact(Set(a, b), contact.normal, contact.state)
+    }
+    (finalObjects.values.toSet, updatedContacts)
   }
 }

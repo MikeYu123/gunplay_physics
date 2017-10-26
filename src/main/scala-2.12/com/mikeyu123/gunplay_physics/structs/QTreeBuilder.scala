@@ -1,7 +1,7 @@
 package com.mikeyu123.gunplay_physics.structs
 
 import com.mikeyu123.gunplay_physics.objects.PhysicsObject
-import scala.collection.Set
+//import scala.collection.Set
 
 object QTreeBuilder {
 
