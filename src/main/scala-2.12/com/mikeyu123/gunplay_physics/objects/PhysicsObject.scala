@@ -14,7 +14,6 @@ abstract class PhysicsObject {
 
   val id: UUID
 
-
   def move(vector: Vector): PhysicsObject
 
   def rotate(degrees: Double): PhysicsObject

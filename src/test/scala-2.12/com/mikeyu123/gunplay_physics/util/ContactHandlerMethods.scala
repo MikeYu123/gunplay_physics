@@ -104,13 +104,9 @@ class ContactHandlerMethods extends GraphicsSpec {
             }
           case _ => contact
         }
-
-        //        contact
       }
 
-      override def postSolve(contact: Contact): Contact
-
-      = contact
+      override def postSolve(contact: Contact): Contact = contact
     }
     val obj0 = PhysicsObjectFactory.spawnPhOb(0, 0, 1, 0)
     val obj1 = PhysicsObjectFactory.spawnPhOb(0, 1, 0, -1)
@@ -118,8 +114,8 @@ class ContactHandlerMethods extends GraphicsSpec {
     val objs = Set(obj0, obj1, obj2)
     val res = ContactHandler.handle(objs, AABB(-3, -3, 3, 3), 4, 4, contactListener)
 
-    res.size should equal (2)
-//    print(0)
+    res.size should equal(2)
+    //    print(0)
   }
 
 

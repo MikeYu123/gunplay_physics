@@ -16,24 +16,34 @@ case class Scene(objects: Set[PhysicsObject], properties: SceneProperties, conta
   }
 
   def remove(uUID: UUID): Scene = {
-    remove(getObject(uUID))
-  }
-
-  def getObject(uUID: UUID): PhysicsObject = {
-    val physicsObject = objects.find(_.id == uUID)
-    physicsObject match {
-      case phOb: Some[PhysicsObject] =>
-        phOb.get
-//      case _ =>
+    getObject(uUID) match {
+      case p: Some[PhysicsObject] =>
+        remove(p.get)
+      case _ => this
     }
   }
 
-  def setObjects(newObjects: Set[PhysicsObject]): Scene={
-    Scene(newObjects, properties,contactListener)
+  def hasId(uUID: UUID): Boolean = {
+    val physicsObject = objects.find(_.id == uUID)
+    physicsObject match {
+      case p: Some[PhysicsObject] =>
+        true
+      case _ =>
+        false
+    }
+  }
+
+  def getObject(uUID: UUID): Option[PhysicsObject] = {
+    val physicsObject = objects.find(_.id == uUID)
+    physicsObject
+  }
+
+  def setObjects(newObjects: Set[PhysicsObject]): Scene = {
+    Scene(newObjects, properties, contactListener)
   }
 
   def step: Scene = {
-    val aabb = objects.map(_.getAabb).reduceLeft(_+_)
+    val aabb = objects.map(_.getAabb).reduceLeft(_ + _)
     val newObjects = ContactHandler.handle(objects, aabb, properties.capacity, properties.depth, contactListener)
     setObjects(newObjects)
   }
