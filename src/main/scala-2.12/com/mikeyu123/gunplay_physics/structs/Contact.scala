@@ -3,9 +3,7 @@ package com.mikeyu123.gunplay_physics.structs
 import java.util.UUID
 
 import com.mikeyu123.gunplay_physics.objects.{ImmovableObject, MovableObject, PhysicsObject, StaticObject}
-
-//import scala.runtime.Statics
-import scala.util.hashing.MurmurHash3
+import com.mikeyu123.gunplay_physics.structs.ContactState.ContactState
 
 
 object Contact {
@@ -13,7 +11,7 @@ object Contact {
     Contact(Set(a, b), Vector(0, 0))
 }
 
-case class Contact(ab: Set[PhysicsObject], normal: Vector, state: Int = 0) {
+case class Contact(ab: Set[PhysicsObject], normal: Vector, state: ContactState = ContactState.default) {
 
   val (a, b) = (ab.head, ab.last) match {
     case (a: ImmovableObject, b: MovableObject) => (b, a)
@@ -43,14 +41,14 @@ case class Contact(ab: Set[PhysicsObject], normal: Vector, state: Int = 0) {
   }
 
   def remove: Contact = {
-    Contact(ab, normal, -1)
+    Contact(ab, normal, ContactState.remove)
   }
 
   def removeA: Contact={
-    Contact(ab,normal, -2)
+    Contact(ab,normal, ContactState.removeA)
   }
 
   def removeB: Contact={
-    Contact(ab,normal, -3)
+    Contact(ab,normal, ContactState.removeB)
   }
 }

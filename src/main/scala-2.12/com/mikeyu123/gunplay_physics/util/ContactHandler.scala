@@ -15,16 +15,12 @@ object ContactHandler {
     val tree = QTreeBuilder(updatedObjects, aabb, capacity, depth)
     val aabbContacts = getAabbContacts(tree)
     val geometryContacts = getGeometryContacts(aabbContacts)
-
     val presolvedContacts = geometryContacts.map(contactListener.preSolve)
-    val (filteredContacts, removedObjects) = filterContacts(presolvedContacts)
-
-    val correctionQueue = getCorrectionsQueue(filteredContacts)
+    val handler0 = ContactHandler(updatedObjects, presolvedContacts).clear
+    val correctionQueue = getCorrectionsQueue(handler0.contacts)
     val correctedObjects = correctionQueue.mergeCorrections.applyCorrections
-    val (mergedObjects, updatedContacts) = mergeUpdates(updatedObjects, correctedObjects, removedObjects, filteredContacts)
-    val postsolvedContacts = updatedContacts.map(contactListener.postSolve)
-    val finalObjects = mergeUpdates(mergedObjects, postsolvedContacts)
-    finalObjects
+    val handler1 = handler0.merge(correctedObjects).mapContacts(contactListener.postSolve)
+    handler1.objs
   }
 
   def getAabbContacts(qTree: QTree): HashSet[Contact] = {
@@ -77,13 +73,19 @@ object ContactHandler {
     val corrections = geometryContacts.map(ContactSolver.solve).reduceLeft(_ ++ _)
     CorrectionQueue(corrections)
   }
-//
-//  def filterContacts(contacts: Set[Contact], objects: Set[PhysicsObject]):Set[PhysicsObject]={
-//
-//  }
+}
 
-  def filterContacts(contacts: Set[Contact]): (Set[Contact], Set[UUID]) = {
-    val objectMap = contacts.foldLeft(Map[UUID, Set[Contact]]()) {
+case class ContactHandler(objs: Set[PhysicsObject], contacts: Set[Contact]) {
+
+  def objectMap: Map[UUID, PhysicsObject] = {
+    objs.map {
+      obj =>
+        (obj.id, obj)
+    }.toMap
+  }
+
+  def contactMap: Map[UUID, Set[Contact]] = {
+    contacts.foldLeft(Map[UUID, Set[Contact]]()) {
       (map, contact) =>
         contact.ab.foldLeft(map) {
           (map, obj) =>
@@ -95,55 +97,38 @@ object ContactHandler {
             }
         }
     }
-    val removedObjects = contacts.filter(_.state <= -2).map {
-      contact =>
-        contact.state match {
-          case -2 => contact.a.id
-          case _ => contact.b.id
-        }
-    }
-    val clearedContacts = removedObjects.foldLeft(contacts) {
-      (set, key) =>
-        set -- objectMap(key)
-    }
-
-    (clearedContacts.filter(_.state >= 0), removedObjects)
   }
 
-  def mergeUpdates(objects: Set[PhysicsObject], contacts: Set[Contact]):Set[PhysicsObject]={
-    val removedObjects = contacts.filter(_.state <= -2).map {
-      contact =>
-        contact.state match {
-          case -2 => contact.a.id
-          case _ => contact.b.id
-        }
+  def clear: ContactHandler = {
+    val removedObjects = contacts.collect {
+      case c if c.state == ContactState.removeA => c.a.id
+      case c if c.state == ContactState.removeB => c.b.id
     }
-    val map: Map[UUID, PhysicsObject] = objects.map {
-      obj =>
-        (obj.id, obj)
-    }.toMap
-
-    (map -- removedObjects).values.toSet
+    val removedContacts: Set[Contact] = removedObjects.size match {
+      case 0 => contacts.filter(_.state != ContactState.default)
+      case _ => contacts.filter(_.state != ContactState.default) ++ removedObjects.map(contactMap(_)).reduceLeft(_ ++ _)
+    }
+    val newContacts = contacts -- removedContacts
+    val newObjects = (objectMap -- removedObjects).values.toSet
+    ContactHandler(newObjects, newContacts)
   }
 
-  def mergeUpdates(objects: Set[PhysicsObject], updated: Set[PhysicsObject], removed: Set[UUID], contacts: Set[Contact]):
-  (Set[PhysicsObject], Set[Contact]) = {
-    val map: Map[UUID, PhysicsObject] = objects.map {
-      obj =>
-        (obj.id, obj)
-    }.toMap
-
-    val mergedObjects = updated.foldLeft(map) {
-      (objs, obj) =>
-        objs.updated(obj.id, obj)
+  def merge(newObjs: Set[PhysicsObject]): ContactHandler = {
+    val newObjects = newObjs.foldLeft(objectMap) {
+      (map, obj) =>
+        map.updated(obj.id, obj)
     }
-    val finalObjects = mergedObjects -- removed
-    val updatedContacts = contacts.map {
+    val newContacts = contacts.map {
       contact =>
-        val a = finalObjects(contact.a.id)
-        val b = finalObjects(contact.b.id)
+        val a = newObjects(contact.a.id)
+        val b = newObjects(contact.b.id)
         Contact(Set(a, b), contact.normal, contact.state)
     }
-    (finalObjects.values.toSet, updatedContacts)
+    ContactHandler(newObjects.values.toSet, newContacts)
+  }
+
+  def mapContacts(f: Contact => Contact): ContactHandler = {
+    val newContacts = contacts.map(f)
+    ContactHandler(objs, newContacts).clear
   }
 }
