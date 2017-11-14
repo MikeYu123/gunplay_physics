@@ -2,10 +2,11 @@ package com.mikeyu123.gunplay_physics.objects
 
 import java.util.UUID
 
-import com.mikeyu123.gunplay_physics.structs.{ContactListener, SceneProperties}
+import com.mikeyu123.gunplay_physics.structs.{AABB, ContactListener, QTree, SceneProperties}
 import com.mikeyu123.gunplay_physics.util.ContactHandler
 
-case class Scene(objects: Set[PhysicsObject], properties: SceneProperties, contactListener: ContactListener) {
+case class Scene(objects: Set[PhysicsObject], properties: SceneProperties,
+                 contactListener: ContactListener, qTree: QTree = QTree.default) {
 
   def addObject(physicsObject: PhysicsObject): Scene = {
     Scene(objects + physicsObject, properties, contactListener)
@@ -44,7 +45,16 @@ case class Scene(objects: Set[PhysicsObject], properties: SceneProperties, conta
 
   def step: Scene = {
     val aabb = objects.map(_.getAabb).reduceLeft(_ + _)
-    val newObjects = ContactHandler.handle(objects, aabb, properties.capacity, properties.depth, contactListener)
-    setObjects(newObjects)
+    val handler = ContactHandler.handle(objects, aabb, properties.capacity, properties.depth, contactListener)
+    setObjects(handler.objs).setQTree(handler.qTree)
+  }
+
+  def setQTree(qTree: QTree): Scene = {
+    Scene(objects, properties, contactListener, qTree)
+  }
+
+  def getObjectsByAabb(aabb: AABB): Set[PhysicsObject] = {
+    qTree.getByAabb(aabb)
+    //    Set()
   }
 }

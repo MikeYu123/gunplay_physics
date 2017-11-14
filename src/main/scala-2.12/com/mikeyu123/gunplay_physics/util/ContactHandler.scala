@@ -10,17 +10,19 @@ import scala.collection.immutable.HashSet
 
 object ContactHandler {
 
-  def handle(objs: Set[PhysicsObject], aabb: AABB, capacity: Int, depth: Int, contactListener: ContactListener): Set[PhysicsObject] = {
+//  def handle(objs: Set[PhysicsObject], aabb: AABB, capacity: Int, depth: Int, contactListener: ContactListener): Set[PhysicsObject] = {
+  def handle(objs: Set[PhysicsObject], aabb: AABB, capacity: Int, depth: Int, contactListener: ContactListener): ContactHandler = {
     val updatedObjects = objs.map(_.applyMotion)
     val tree = QTreeBuilder(updatedObjects, aabb, capacity, depth)
     val aabbContacts = getAabbContacts(tree)
     val geometryContacts = getGeometryContacts(aabbContacts)
     val presolvedContacts = geometryContacts.map(contactListener.preSolve)
-    val handler0 = ContactHandler(updatedObjects, presolvedContacts).clear
+    val handler0 = ContactHandler(updatedObjects, presolvedContacts, tree).clear
     val correctionQueue = getCorrectionsQueue(handler0.contacts)
     val correctedObjects = correctionQueue.mergeCorrections.applyCorrections
-    val handler1 = handler0.merge(correctedObjects).mapContacts(contactListener.postSolve)
-    handler1.objs
+    val handler1 = handler0.merge(correctedObjects).mapContacts(contactListener.postSolve).rebuildQTree
+//    handler1.objs
+    handler1
   }
 
   def getAabbContacts(qTree: QTree): HashSet[Contact] = {
@@ -75,7 +77,7 @@ object ContactHandler {
   }
 }
 
-case class ContactHandler(objs: Set[PhysicsObject], contacts: Set[Contact]) {
+case class ContactHandler(objs: Set[PhysicsObject], contacts: Set[Contact], qTree: QTree) {
 
   def objectMap: Map[UUID, PhysicsObject] = {
     objs.map {
@@ -110,7 +112,7 @@ case class ContactHandler(objs: Set[PhysicsObject], contacts: Set[Contact]) {
     }
     val newContacts = contacts -- removedContacts
     val newObjects = (objectMap -- removedObjects).values.toSet
-    ContactHandler(newObjects, newContacts)
+    ContactHandler(newObjects, newContacts, qTree)
   }
 
   def merge(newObjs: Set[PhysicsObject]): ContactHandler = {
@@ -124,11 +126,15 @@ case class ContactHandler(objs: Set[PhysicsObject], contacts: Set[Contact]) {
         val b = newObjects(contact.b.id)
         Contact(Set(a, b), contact.normal, contact.state)
     }
-    ContactHandler(newObjects.values.toSet, newContacts)
+    ContactHandler(newObjects.values.toSet, newContacts, qTree)
   }
 
   def mapContacts(f: Contact => Contact): ContactHandler = {
     val newContacts = contacts.map(f)
-    ContactHandler(objs, newContacts).clear
+    ContactHandler(objs, newContacts, qTree).clear
+  }
+
+  def rebuildQTree: ContactHandler = {
+    ContactHandler(objs, contacts, QTreeBuilder(qTree, objs))
   }
 }
