@@ -44,14 +44,7 @@ case class LineSegment(start: Point, end: Point) {
 
   def normal: Vector = {
     val vec = toVector
-    val signX = vec.dx > 0
-    val signY = vec.dy >= 0
-    val norm = (signX, signY) match {
-      case (true, true) => Vector(-vec.dy, vec.dx)
-      case (false, true) => Vector(-vec.dy, vec.dx)
-      case (false, false) => Vector(-vec.dy, vec.dx)
-      case (true, false) => Vector(-vec.dy, vec.dx)
-    }
+    val norm = Vector(-vec.dy, vec.dx)
     norm / math.sqrt(norm * norm)
   }
 
@@ -108,9 +101,41 @@ case class LineSegment(start: Point, end: Point) {
     Point(x, y)
   }
 
+//
+//  def willIntersect0(lineSegment: LineSegment): Boolean = {
+//    val intersectionPoint = intersection(lineSegment)
+//    val extendedLine = LineSegment(start, intersectionPoint)
+//    val c0 = extendedLine.projectsOn(end)
+//    val c1 = projectsOn(intersectionPoint)
+//    val res = c0 || c1
+//    if (res) {
+//      val res0 = willIntersect0(lineSegment)
+//      print("0")
+//    }
+//    res
+//  }
+//
+//  def willIntersect1(lineSegment: LineSegment): Boolean = {
+//    val d0 = direction(lineSegment.start)
+//    val d1 = direction(lineSegment.end)
+//    val ss = lineSegment.start - start
+//    val se = lineSegment.end - start
+//    val pr0 = toVector * ss
+//    val pr1 = toVector * se
+//    if (d0 * d1 <= 0)
+//      !(pr0 < 0 && pr1 < 0)
+//    else false
+//  }
+
   def willIntersect(lineSegment: LineSegment): Boolean = {
-    val intersectionPoint = intersection(lineSegment)
-    val startO = LineSegment(start, intersectionPoint)
-    startO.projectsOn(end) || projectsOn(intersectionPoint)
+    val d0 = direction(lineSegment.start)
+    val d1 = direction(lineSegment.end)
+    val l0 = LineSegment(start, lineSegment.start)
+    val d2 = l0.direction(end)
+    val d3 = l0.direction(lineSegment.end)
+    val l1 = LineSegment(start, lineSegment.end)
+    val d4 = l1.direction(end)
+    val d5 = l1.direction(lineSegment.start)
+    (d0 * d1 <= 0) & (d2 * d3 >= 0) & (d4 * d5 >= 0)
   }
 }

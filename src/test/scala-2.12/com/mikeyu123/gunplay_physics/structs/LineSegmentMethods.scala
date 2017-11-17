@@ -169,6 +169,15 @@ class LineSegmentMethods extends GraphicsSpec {
     val l1 = LineSegment(Point(0, 0), Point(5, 0))
     val res = l1.willIntersect(l0)
     res should equal {
+      false
+    }
+  }
+
+  it should "intersection line test 80" in {
+    val l0 = LineSegment(Point(1, 2), Point(2, 1))
+    val l1 = LineSegment(Point(0, 0), Point(5, 0))
+    val res = l0.willIntersect(l1)
+    res should equal {
       true
     }
   }
@@ -181,6 +190,5 @@ class LineSegmentMethods extends GraphicsSpec {
       false
     }
   }
-
 
 }

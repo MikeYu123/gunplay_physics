@@ -25,13 +25,7 @@ case class Scene(objects: Set[PhysicsObject], properties: SceneProperties,
   }
 
   def hasId(uUID: UUID): Boolean = {
-    val physicsObject = objects.find(_.id == uUID)
-    physicsObject match {
-      case p: Some[PhysicsObject] =>
-        true
-      case _ =>
-        false
-    }
+    objects.exists(_.id == uUID)
   }
 
   def getObject(uUID: UUID): Option[PhysicsObject] = {
@@ -44,7 +38,10 @@ case class Scene(objects: Set[PhysicsObject], properties: SceneProperties,
   }
 
   def step: Scene = {
-    val aabb = objects.map(_.getAabb).reduceLeft(_ + _)
+    val aabb: AABB = objects.foldLeft(AABB(0, 0, 0, 0)) {
+      (aabb, obj) =>
+        aabb + obj.getAabb
+    }
     val handler = ContactHandler.handle(objects, aabb, properties.capacity, properties.depth, contactListener)
     setObjects(handler.objs).setQTree(handler.qTree)
   }
@@ -55,6 +52,5 @@ case class Scene(objects: Set[PhysicsObject], properties: SceneProperties,
 
   def getObjectsByAabb(aabb: AABB): Set[PhysicsObject] = {
     qTree.getByAabb(aabb)
-    //    Set()
   }
 }
