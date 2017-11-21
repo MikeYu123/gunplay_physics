@@ -14,11 +14,7 @@ case class Correction(contact: Contact, afterContactPath: Vector, contactTime: D
   }
 
   def related(that: Correction): Boolean = {
-    contact.a.id.equals(that.contact.a.id) match {
-      case true =>
-        contact.b.id.equals(that.contact.b.id)
-      case _ => false
-    }
+    contact.a.id.equals(that.contact.a.id) && contact.b.id.equals(that.contact.b.id)
   }
 
   def swapSubject(old: PhysicsObject, next: PhysicsObject): Correction = {

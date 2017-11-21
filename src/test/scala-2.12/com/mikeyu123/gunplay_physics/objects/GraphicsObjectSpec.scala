@@ -22,6 +22,6 @@ class GraphicsObjectSpec extends GraphicsSpec {
                                         Point(5 / sqrt2, 5 / sqrt2),
                                         Point(0, 5 * sqrt2),
                                         Point(-5 / sqrt2, 5 / sqrt2)), Point(0, 0))
-    originalObject.rotate(45) should equal(rotatedObject)
+    originalObject.rotate(45d.toRadians) should equal(rotatedObject)
   }
 }

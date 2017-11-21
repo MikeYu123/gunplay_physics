@@ -17,19 +17,19 @@ class AABBMethods extends GraphicsSpec {
   }
 
   it should "render correct AABB center" in {
-    AABB(Point(1, 0), Point(3, 2)).getCenter should equal(
+    AABB(Point(1, 0), Point(3, 2)).center should equal(
       Point(2.0d, 1.0d)
     )
   }
 
   it should "render correct AABB width" in {
-    AABB(Point(1, 0), Point(3.1, 2)).getW should equal(
+    AABB(Point(1, 0), Point(3.1, 2)).width should equal(
       2.1d
     )
   }
 
   it should "render correct AABB height" in {
-    AABB(Point(1, 0), Point(3, 5.2)).getH should equal(
+    AABB(Point(1, 0), Point(3, 5.2)).height should equal(
       5.2d
     )
   }

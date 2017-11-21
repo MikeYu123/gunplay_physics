@@ -40,6 +40,6 @@ class RectangleSpec extends GraphicsSpec {
       Point(0, 5 * sqrt2),
       Point(-5 / sqrt2, 5 / sqrt2))
 
-    originalRectangle.rotate(Point(0,0), 45) should equal(rotatedRectangle)
+    originalRectangle.rotate(Point(0,0), 45d.toRadians) should equal(rotatedRectangle)
   }
 }

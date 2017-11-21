@@ -26,8 +26,8 @@ case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point)
     Rectangle(point1 + vector, point2 + vector, point3 + vector, point4 + vector)
   }
 
-  def rotate(center: Point, degrees: Double): Rectangle = {
-    Rectangle(point1.rotate(center, degrees), point2.rotate(center, degrees), point3.rotate(center, degrees), point4.rotate(center, degrees))
+  def rotate(center: Point, radians: Double): Rectangle = {
+    Rectangle(point1.rotate(center, radians), point2.rotate(center, radians), point3.rotate(center, radians), point4.rotate(center, radians))
   }
 
   def center: Point = {
@@ -38,7 +38,7 @@ case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point)
     Set[Point](point1, point2, point3, point4)
   }
 
-  def getAabb: AABB = {
+  def aabb: AABB = {
     val p: Set[Point] = points
     val firstMinMax: (Point, Point) = (point1, point1)
     val (a: Point, b: Point) =

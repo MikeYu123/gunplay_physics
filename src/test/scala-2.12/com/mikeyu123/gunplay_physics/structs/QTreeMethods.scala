@@ -48,15 +48,17 @@ class QTreeMethods extends GraphicsSpec {
     val qTree: QTree = setup
     val tr = qTree.traverse
 
+    val target = Set(
+      Set(r0, r2, r3),
+      Set(r1, r2, r3),
+      Set(r3, r4, r5),
+      Set(r3, r4),
+      Set(r4, r5),
+      Set(r6)
+    )
+    val res = tr.equals(target)
     tr should equal {
-      Set(
-        Set(r0, r2, r3),
-        Set(r1, r2, r3),
-        Set(r3, r4, r5),
-        Set(r3, r4),
-        Set(r4, r5),
-        Set(r6)
-      )
+      target
     }
   }
 

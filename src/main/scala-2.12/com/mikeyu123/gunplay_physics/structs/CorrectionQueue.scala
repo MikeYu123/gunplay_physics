@@ -22,14 +22,15 @@ case class CorrectionQueue(map: Map[PhysicsObject, SortedSet[Correction]]) {
     map.filter(_._2.size > 1).keySet
   }
 
+  //TODO: fold
   def update(correctionQueueEntry: CorrectionQueueEntry): CorrectionQueue = {
     val set = map(correctionQueueEntry.physicsObject)
-    val newSet = set.find(_.related(correctionQueueEntry.correction)) match {
+    val newSet0 = set.find(_.related(correctionQueueEntry.correction)) match {
       case c: Some[Correction] =>
         set - c.get + correctionQueueEntry.correction
       case _ => set
-
     }
+    val newSet = set.find(_.related(correctionQueueEntry.correction)).fold(set)(set - _ + correctionQueueEntry.correction)
     CorrectionQueue(map.updated(correctionQueueEntry.physicsObject, newSet))
   }
 
@@ -42,17 +43,15 @@ case class CorrectionQueue(map: Map[PhysicsObject, SortedSet[Correction]]) {
   }
 
   def applyCorrections: Set[PhysicsObject] = {
-    isFlat match {
-      case true =>
+    if (isFlat) {
         map.map {
           (pair) =>
             val physicsObject = pair._1
             val correction = pair._2.head
             correction.correct(physicsObject)
         }.toSet
-      case _ =>
-        Set()
     }
+    else Set()
   }
 
   def mergeCorrections: CorrectionQueue = {

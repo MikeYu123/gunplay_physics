@@ -143,7 +143,8 @@ class ContactMethods extends GraphicsSpec {
     val m0 = PhysicsObjectFactory.spawnStOb(0)
     val m1 = PhysicsObjectFactory.spawnStOb(1)
     val c = Contact(m0, m1)
-    c.other(m0) should equal(m1)
+    var res = c.other(m0)
+    res should equal(m1)
   }
 
   it should "equals test 0" in {
@@ -151,8 +152,8 @@ class ContactMethods extends GraphicsSpec {
     val m1 = PhysicsObjectFactory.spawnStOb(1)
     val c0 = Contact(m0, m1)
     val m2 = PhysicsObjectFactory.spawnStOb(0)
-    val m3= PhysicsObjectFactory.spawnStOb(1)
+    val m3 = PhysicsObjectFactory.spawnStOb(1)
     val c1 = Contact(m2, m3)
-//    c0 should equal (c1)
+    //    c0 should equal (c1)
   }
 }

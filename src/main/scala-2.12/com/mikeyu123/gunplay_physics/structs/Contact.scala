@@ -11,7 +11,7 @@ object Contact {
     Contact(Set(a, b), Vector(0, 0))
 }
 
-case class Contact(ab: Set[PhysicsObject], normal: Vector, state: ContactState = ContactState.default) {
+case class Contact(ab: Set[PhysicsObject], normal: Vector, state: ContactState = ContactState.Default) {
 
   val (a, b) = (ab.head, ab.last) match {
     case (a: ImmovableObject, b: MovableObject) => (b, a)
@@ -25,30 +25,32 @@ case class Contact(ab: Set[PhysicsObject], normal: Vector, state: ContactState =
   }
 
   def other(physicsObject: PhysicsObject): PhysicsObject = {
-    //    ab.filter(!physicsObject.equals(_)).head
-    ab.find(!physicsObject.equals(_)).get
+    if (b == physicsObject)
+      a
+    else b
   }
 
   def swapSubject(old: PhysicsObject, next: PhysicsObject): Contact = {
-    ab.contains(old) match {
-      case true => Contact(ab - old + next, normal)
-      case _ => this
+    ab.find(_.id == old.id).fold(this) {
+      (some) =>
+        Contact(ab - old + next, normal)
     }
+
   }
 
-  def hasObject(uUID: UUID): Boolean={
+  def hasObject(uUID: UUID): Boolean = {
     ab.exists(_.id == uUID)
   }
 
   def remove: Contact = {
-    Contact(ab, normal, ContactState.remove)
+    Contact(ab, normal, ContactState.Remove)
   }
 
-  def removeA: Contact={
-    Contact(ab,normal, ContactState.removeA)
+  def removeA: Contact = {
+    Contact(ab, normal, ContactState.RemoveA)
   }
 
-  def removeB: Contact={
-    Contact(ab,normal, ContactState.removeB)
+  def removeB: Contact = {
+    Contact(ab, normal, ContactState.RemoveB)
   }
 }

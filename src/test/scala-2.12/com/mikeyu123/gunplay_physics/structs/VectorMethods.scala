@@ -45,4 +45,8 @@ class VectorMethods extends GraphicsSpec {
   it should "normalize test 0" in {
     Vector(2, 0).normalize should equal(Vector(1, 0))
   }
+
+  it should "abs test 0" in {
+    Vector(-2, 0).abs should equal(Vector(2, 0))
+  }
 }

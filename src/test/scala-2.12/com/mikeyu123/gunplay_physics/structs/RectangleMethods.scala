@@ -10,7 +10,7 @@ class RectangleMethods extends GraphicsSpec {
   val r2: Rectangle = r1.move(1, 1)
 
   it should "render correct AABB" in {
-    Rectangle(Point(1, 1), Point(0, 3), Point(4, 5), Point(5, 3)).getAabb should equal(
+    Rectangle(Point(1, 1), Point(0, 3), Point(4, 5), Point(5, 3)).aabb should equal(
       AABB(Point(0, 1), Point(5, 5))
     )
   }

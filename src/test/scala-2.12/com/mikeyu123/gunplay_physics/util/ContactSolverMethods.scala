@@ -167,4 +167,11 @@ class ContactSolverMethods extends GraphicsSpec {
     result
   }
 
+  it should "solve test24" in {
+    val obj0 = PhysicsObjectFactory.spawnPhOb(0, 0, 1, 0).applyMotion
+    val obj2 = PhysicsObjectFactory.spawnPhOb(1.5, 1.5, -1, -1).applyMotion
+    val con = Contact(obj0, obj2)
+    val res = ContactSolver.solve(con)
+//    res.head.correction.contactTime should equal(1 / 2.0)
+  }
 }

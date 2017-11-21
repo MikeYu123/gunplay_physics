@@ -8,6 +8,9 @@ import com.mikeyu123.gunplay_physics.util.ContactHandler
 case class Scene(objects: Set[PhysicsObject], properties: SceneProperties,
                  contactListener: ContactListener, qTree: QTree = QTree.default) {
 
+
+  //TODO: def +, def -
+
   def addObject(physicsObject: PhysicsObject): Scene = {
     Scene(objects + physicsObject, properties, contactListener)
   }
@@ -15,7 +18,7 @@ case class Scene(objects: Set[PhysicsObject], properties: SceneProperties,
   def remove(physicsObject: PhysicsObject): Scene = {
     Scene(objects - physicsObject, properties, contactListener)
   }
-
+  //TODO: fold(this)(...)
   def remove(uUID: UUID): Scene = {
     getObject(uUID) match {
       case p: Some[PhysicsObject] =>
@@ -40,7 +43,7 @@ case class Scene(objects: Set[PhysicsObject], properties: SceneProperties,
   def step: Scene = {
     val aabb: AABB = objects.foldLeft(AABB(0, 0, 0, 0)) {
       (aabb, obj) =>
-        aabb + obj.getAabb
+        aabb + obj.aabb
     }
     val handler = ContactHandler.handle(objects, aabb, properties.capacity, properties.depth, contactListener)
     setObjects(handler.objs).setQTree(handler.qTree)

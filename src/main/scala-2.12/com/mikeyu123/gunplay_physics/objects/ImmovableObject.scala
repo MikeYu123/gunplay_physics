@@ -15,8 +15,8 @@ case class ImmovableObject(shape: GeometryPrimitive, center: Point, properties: 
     ImmovableObject(shape.move(vector), center + vector, properties, id)
   }
 
-  def rotate(degrees: Double): PhysicsObject = {
-    ImmovableObject(shape.rotate(center, degrees), center, properties, id)
+  def rotate(radians: Double): PhysicsObject = {
+    ImmovableObject(shape.rotate(center, radians), center, properties, id)
   }
 
   def applyMotion(motion: Motion): PhysicsObject = {

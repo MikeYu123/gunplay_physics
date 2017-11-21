@@ -19,7 +19,7 @@ class PointSpec extends GraphicsSpec {
     val originalPoint = Point(5, 5)
     val rotatedPoint = Point(0, 5 * sqrt2)
 
-    originalPoint.rotate(Point(0,0), 45) should equal(rotatedPoint)
+    originalPoint.rotate(Point(0,0), 45.0d.toRadians) should equal(rotatedPoint)
   }
 
   it should "calculate correct sum with vector" in {

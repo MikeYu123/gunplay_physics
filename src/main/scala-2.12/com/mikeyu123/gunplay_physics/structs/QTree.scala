@@ -11,7 +11,7 @@ case class QTree(objects: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, cap
 
   //  TODO possibly refactor via inheritance & matches
   def insert(obj: PhysicsObject): QTree = {
-    if (obj.getAabb.intersects(aabb)) {
+    if (obj.aabb.intersects(aabb)) {
       if (nodes.nonEmpty)
         QTree(objects, nodes.map(_.insert(obj)), aabb, capacity, depth)
       else if (objects.size < capacity || depth == 0)
@@ -41,7 +41,7 @@ case class QTree(objects: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, cap
 
   def getByAabb(aABB: AABB): Set[PhysicsObject] = {
     val objs: Set[PhysicsObject] = objects.collect{
-      case o if o.getAabb.intersects(aABB) => o
+      case o if o.aabb.intersects(aABB) => o
     }
     val nodesObjs: Set[Set[PhysicsObject]] = nodes.collect {
       case n if n.aabb.intersects(aABB) => n.getByAabb(aABB)

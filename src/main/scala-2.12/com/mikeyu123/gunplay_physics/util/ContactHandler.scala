@@ -10,7 +10,7 @@ import scala.collection.immutable.HashSet
 
 object ContactHandler {
 
-//  def handle(objs: Set[PhysicsObject], aabb: AABB, capacity: Int, depth: Int, contactListener: ContactListener): Set[PhysicsObject] = {
+  //  def handle(objs: Set[PhysicsObject], aabb: AABB, capacity: Int, depth: Int, contactListener: ContactListener): Set[PhysicsObject] = {
   def handle(objs: Set[PhysicsObject], aabb: AABB, capacity: Int, depth: Int, contactListener: ContactListener): ContactHandler = {
     val updatedObjects = objs.map(_.applyMotion)
     val tree = QTreeBuilder(updatedObjects, aabb, capacity, depth)
@@ -21,7 +21,7 @@ object ContactHandler {
     val correctionQueue = getCorrectionsQueue(handler0.contacts)
     val correctedObjects = correctionQueue.mergeCorrections.applyCorrections
     val handler1 = handler0.merge(correctedObjects).mapContacts(contactListener.postSolve).rebuildQTree
-//    handler1.objs
+    //    handler1.objs
     handler1
   }
 
@@ -44,7 +44,7 @@ object ContactHandler {
   }
 
   def aabbContact(a: PhysicsObject, b: PhysicsObject): Option[Contact] = {
-    if (a.getAabb.intersects(b.getAabb))
+    if (a.aabb.intersects(b.aabb))
       Option[Contact](Contact(a, b))
     else None
   }
@@ -72,7 +72,11 @@ object ContactHandler {
   }
 
   def getCorrectionsQueue(geometryContacts: Set[Contact]): CorrectionQueue = {
-    val corrections = geometryContacts.map(ContactSolver.solve).reduceLeft(_ ++ _)
+    //    val corrections = geometryContacts.map(ContactSolver.solve).reduceLeft(_ ++ _)
+    val corrections = geometryContacts.foldLeft(Set[CorrectionQueueEntry]()) {
+      (res, contact) =>
+        res ++ ContactSolver.solve(contact)
+    }
     CorrectionQueue(corrections)
   }
 }
@@ -103,12 +107,12 @@ case class ContactHandler(objs: Set[PhysicsObject], contacts: Set[Contact], qTre
 
   def clear: ContactHandler = {
     val removedObjects = contacts.collect {
-      case c if c.state == ContactState.removeA => c.a.id
-      case c if c.state == ContactState.removeB => c.b.id
+      case c if c.state == ContactState.RemoveA => c.a.id
+      case c if c.state == ContactState.RemoveB => c.b.id
     }
     val removedContacts: Set[Contact] = removedObjects.size match {
-      case 0 => contacts.filter(_.state != ContactState.default)
-      case _ => contacts.filter(_.state != ContactState.default) ++ removedObjects.map(contactMap(_)).reduceLeft(_ ++ _)
+      case 0 => contacts.filter(_.state != ContactState.Default)
+      case _ => contacts.filter(_.state != ContactState.Default) ++ removedObjects.map(contactMap(_)).reduceLeft(_ ++ _)
     }
     val newContacts = contacts -- removedContacts
     val newObjects = (objectMap -- removedObjects).values.toSet

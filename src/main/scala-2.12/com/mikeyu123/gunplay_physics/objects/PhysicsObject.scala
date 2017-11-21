@@ -16,7 +16,7 @@ abstract class PhysicsObject {
 
   def move(vector: Vector): PhysicsObject
 
-  def rotate(degrees: Double): PhysicsObject
+  def rotate(radians: Double): PhysicsObject
 
   def applyMotion(motion: Motion): PhysicsObject
 
@@ -28,8 +28,8 @@ abstract class PhysicsObject {
     setMotion(Motion(path, properties.motion.rotation))
   }
 
-  def getAabb: AABB = {
-    shape.getAabb
+  def aabb: AABB = {
+    shape.aabb
   }
 
   def revert(time: Double): PhysicsObject = {

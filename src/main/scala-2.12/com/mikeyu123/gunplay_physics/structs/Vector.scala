@@ -40,6 +40,8 @@ case class Vector(dx: Double, dy: Double) extends Ordered[Vector] {
     }
   }
 
+//  def
+
   def isZero: Boolean = {
     dx == 0 && dy == 0
   }
@@ -51,4 +53,6 @@ case class Vector(dx: Double, dy: Double) extends Ordered[Vector] {
   override def compare(that: Vector): Int = {
     (this * this).compare(that * that)
   }
+
+  def abs: Vector = Vector(dx.abs, dy.abs)
 }

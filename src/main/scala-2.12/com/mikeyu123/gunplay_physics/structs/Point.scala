@@ -8,8 +8,7 @@ case class Point(x: Double, y: Double) {
     Point(x + dx, y + dy)
   }
 
-  def rotate(center: Point, degrees: Double): Point = {
-    val radians = degrees.toRadians
+  def rotate(center: Point, radians: Double): Point = {
     val newX = center.x + (x - center.x) * Math.cos(radians) - (y - center.y) * Math.sin(radians)
     val newY = center.y + (y - center.y) * Math.cos(radians) + (x - center.x) * Math.sin(radians)
     Point(newX, newY)
