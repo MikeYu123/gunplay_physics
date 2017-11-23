@@ -6,7 +6,7 @@ import com.mikeyu123.gunplay_physics.objects.PhysicsObject
 object QTree {
   val default = QTree(Set(), Set(), AABB(0, 0, 0, 0), 0, 0)
 }
-
+//TODO: TraversableLike
 case class QTree(objects: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, capacity: Int, depth: Int) extends Iterable[Set[PhysicsObject]] {
 
   //  TODO possibly refactor via inheritance & matches

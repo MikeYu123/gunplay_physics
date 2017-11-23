@@ -8,23 +8,16 @@ import com.mikeyu123.gunplay_physics.util.ContactHandler
 case class Scene(objects: Set[PhysicsObject], properties: SceneProperties,
                  contactListener: ContactListener, qTree: QTree = QTree.default) {
 
-
-  //TODO: def +, def -
-
-  def addObject(physicsObject: PhysicsObject): Scene = {
+  def +(physicsObject: PhysicsObject): Scene = {
     Scene(objects + physicsObject, properties, contactListener)
   }
 
-  def remove(physicsObject: PhysicsObject): Scene = {
+  def -(physicsObject: PhysicsObject): Scene = {
     Scene(objects - physicsObject, properties, contactListener)
   }
-  //TODO: fold(this)(...)
-  def remove(uUID: UUID): Scene = {
-    getObject(uUID) match {
-      case p: Some[PhysicsObject] =>
-        remove(p.get)
-      case _ => this
-    }
+
+  def -(uUID: UUID): Scene = {
+    getObject(uUID).fold(this)(this - _)
   }
 
   def hasId(uUID: UUID): Boolean = {

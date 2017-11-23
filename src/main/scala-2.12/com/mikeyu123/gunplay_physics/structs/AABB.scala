@@ -7,7 +7,6 @@ object AABB {
 case class AABB(leftBottom: Point, rightTop: Point) {
 
 
-  //TODO: namings
   def divide: Set[AABB] = {
     val divisionPoint: Point = center
     val quarter1: AABB = AABB(divisionPoint, rightTop)
@@ -17,7 +16,6 @@ case class AABB(leftBottom: Point, rightTop: Point) {
     Set[AABB](quarter1, quarter2, quarter3, quarter4)
   }
 
-  //TODO: center etc
   def center: Point = {
     Point((rightTop.x + leftBottom.x) / 2, (rightTop.y + leftBottom.y) / 2)
   }
@@ -39,6 +37,6 @@ case class AABB(leftBottom: Point, rightTop: Point) {
   }
 
   def +(other: AABB): AABB = {
-    AABB(leftBottom.min(other.leftBottom), rightTop.max(other.rightTop))
+    AABB(leftBottom.bottemLeftCorner(other.leftBottom), rightTop.topRightCorner(other.rightTop))
   }
 }

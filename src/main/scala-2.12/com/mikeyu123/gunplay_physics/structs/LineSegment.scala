@@ -13,6 +13,7 @@ object LineSegment {
 }
 
 case class LineSegment(start: Point, end: Point) {
+
   def contains(point: Point): Boolean = {
     //    TODO: decompose to vectors
     val point1point2 = end - start
@@ -53,8 +54,7 @@ case class LineSegment(start: Point, end: Point) {
   }
 
   def has(point: Point): Boolean = {
-    if (point.equals(start) || point.equals(end)) true
-    else false
+    point.equals(start) || point.equals(end)
   }
 
   def projectsOn(point: Point): Boolean = {
@@ -65,30 +65,23 @@ case class LineSegment(start: Point, end: Point) {
     0 <= dot && dot <= len
   }
 
+  //TODO: refactor
   def direction(point: Point): Double = {
     val (v0, v1) = (toVector, point - start)
     v0.pseudoScalar(v1)
   }
 
-  def intersects(lineSegment: LineSegment): Boolean = {
-    val d0 = direction(lineSegment.start)
-    val d1 = direction(lineSegment.end)
-    val d2 = lineSegment.direction(start)
-    val d3 = lineSegment.direction(end)
-
-    if (d0 * d1 < 0 || d2 * d3 < 0)
-      true
-    else if (d0 == 0 && projectsOn(lineSegment.start))
-      true
-    else if (d1 == 0 && projectsOn(lineSegment.end))
-      true
-    else if (d2 == 0 && lineSegment.projectsOn(start))
-      true
-    else if (d3 == 0 && lineSegment.projectsOn(end))
-      true
-    else
-      false
-  }
+//  def intersects(lineSegment: LineSegment): Boolean = {
+//    val d0 = direction(lineSegment.start)
+//    val d1 = direction(lineSegment.end)
+//    val d2 = lineSegment.direction(start)
+//    val d3 = lineSegment.direction(end)
+//    (d0 * d1 < 0 || d2 * d3 < 0) ||
+//      (d0 == 0 && projectsOn(lineSegment.start)) ||
+//      (d1 == 0 && projectsOn(lineSegment.end)) ||
+//      (d2 == 0 && lineSegment.projectsOn(start)) ||
+//      (d3 == 0 && lineSegment.projectsOn(end))
+//  }
 
   def intersection(lineSegment: LineSegment): Point = {
     val (a1, a2) = (start.y - end.y, lineSegment.start.y - lineSegment.end.y)
@@ -101,41 +94,15 @@ case class LineSegment(start: Point, end: Point) {
     Point(x, y)
   }
 
-//
-//  def willIntersect0(lineSegment: LineSegment): Boolean = {
-//    val intersectionPoint = intersection(lineSegment)
-//    val extendedLine = LineSegment(start, intersectionPoint)
-//    val c0 = extendedLine.projectsOn(end)
-//    val c1 = projectsOn(intersectionPoint)
-//    val res = c0 || c1
-//    if (res) {
-//      val res0 = willIntersect0(lineSegment)
-//      print("0")
-//    }
-//    res
-//  }
-//
-//  def willIntersect1(lineSegment: LineSegment): Boolean = {
-//    val d0 = direction(lineSegment.start)
-//    val d1 = direction(lineSegment.end)
-//    val ss = lineSegment.start - start
-//    val se = lineSegment.end - start
-//    val pr0 = toVector * ss
-//    val pr1 = toVector * se
-//    if (d0 * d1 <= 0)
-//      !(pr0 < 0 && pr1 < 0)
-//    else false
-//  }
-
   def willIntersect(lineSegment: LineSegment): Boolean = {
-    val d0 = direction(lineSegment.start)
-    val d1 = direction(lineSegment.end)
-    val l0 = LineSegment(start, lineSegment.start)
-    val d2 = l0.direction(end)
-    val d3 = l0.direction(lineSegment.end)
-    val l1 = LineSegment(start, lineSegment.end)
-    val d4 = l1.direction(end)
-    val d5 = l1.direction(lineSegment.start)
-    (d0 * d1 <= 0) & (d2 * d3 >= 0) & (d4 * d5 >= 0)
+    val direction0 = direction(lineSegment.start)
+    val direction1 = direction(lineSegment.end)
+    val line0 = LineSegment(start, lineSegment.start)
+    val direction2 = line0.direction(end)
+    val direction3 = line0.direction(lineSegment.end)
+    val line1 = LineSegment(start, lineSegment.end)
+    val direction4 = line1.direction(end)
+    val direction5 = line1.direction(lineSegment.start)
+    (direction0 * direction1 <= 0) & (direction2 * direction3 >= 0) & (direction4 * direction5 >= 0)
   }
 }

@@ -37,6 +37,7 @@ object ContactHandler {
     combinations.foldLeft(Set[Contact]()) {
       (set, comb) =>
         aabbContact(comb._1, comb._2) match {
+          //TODO: fold
           case c: Some[Contact] => set + c.get
           case _ => set
         }
@@ -49,6 +50,7 @@ object ContactHandler {
     else None
   }
 
+  //TODO: to Contact class
   def getGeometryContacts(aabbContacts: Set[Contact]): Set[Contact] = {
     aabbContacts.filter(IntersectionDetector.intersects)
   }
@@ -60,6 +62,7 @@ object ContactHandler {
     }
   }
 
+  //TODO: case class
   def getCombinations(set: Set[PhysicsObject]): Set[Tuple2[PhysicsObject, PhysicsObject]] = {
     val list = set.toList
     val pairs = for {
@@ -97,9 +100,9 @@ case class ContactHandler(objs: Set[PhysicsObject], contacts: Set[Contact], qTre
           (map, obj) =>
             map.get(obj.id) match {
               case set: Some[Set[Contact]] =>
-                map.updated(obj.id, set.get + contact)
+                map + (obj.id -> (set.get + contact))
               case _ =>
-                map.updated(obj.id, Set(contact))
+                map + (obj.id -> Set(contact))
             }
         }
     }

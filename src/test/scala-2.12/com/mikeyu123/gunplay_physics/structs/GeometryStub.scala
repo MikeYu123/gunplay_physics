@@ -1,11 +1,9 @@
 package com.mikeyu123.gunplay_physics.structs
 
-import com.mikeyu123.gunplay_physics.util.DebugToString
-
-case class GeometryStub(d: Double) extends GeometryPrimitive{
+case class GeometryStub(d: Double) extends GeometryPrimitive {
   override def center: Point = ???
 
-  override def aabb: AABB = AABB(d,d,d,d)
+  override def aabb: AABB = AABB(d, d, d, d)
 
   override def move(path: Vector): GeometryPrimitive = ???
 

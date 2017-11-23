@@ -29,29 +29,29 @@ class SceneMethods extends GraphicsSpec {
   val obj2: PhysicsObject = PhysicsObjectFactory.spawnPhOb(1.5, 0, -1, 0)
   val obj3: PhysicsObject = PhysicsObjectFactory.spawnPhOb(1.5, 0, -1, 0)
   val objs = Set(obj0, obj1, obj2)
-  val scene = Scene(objs, SceneProperties(30, 4, 4), contactListener)
+  val scene = Scene(objs, SceneProperties(4, 4), contactListener)
 
   it should "add object" in {
 
-    scene.addObject(obj3).objects should equal(objs + obj3)
+    (scene + obj3).objects should equal(objs + obj3)
   }
 
   it should "remove object by id" in {
     val id = obj1.id
-    scene.remove(id).objects should equal(objs - obj1)
+    scene.-(id).objects should equal(objs - obj1)
   }
 
   it should "remove object 0" in {
-    scene.remove(obj1).objects should equal(objs - obj1)
+    scene.-(obj1).objects should equal(objs - obj1)
   }
 
   it should "remove object 1" in {
-    scene.remove(obj3) should equal(scene)
+    scene.-(obj3) should equal(scene)
   }
 
   it should "remove object by incorrect id" in {
     val id = UUID.randomUUID()
-    val newScene = scene.remove(id)
+    val newScene = scene.-(id)
     newScene should equal(scene)
   }
 
@@ -84,7 +84,7 @@ class SceneMethods extends GraphicsSpec {
   }
 
   it should "create scene" in {
-    val scene0 = Scene(objs, SceneProperties(30, 4, 4), contactListener)
+    val scene0 = Scene(objs, SceneProperties(4, 4), contactListener)
     scene0.objects.size should equal (3)
   }
 }

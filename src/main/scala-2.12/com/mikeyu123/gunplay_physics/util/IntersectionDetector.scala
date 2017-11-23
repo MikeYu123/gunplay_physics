@@ -17,12 +17,6 @@ object IntersectionDetector {
   def rectRect(a: Rectangle, b: Rectangle): Boolean = {
     val pointsA = a.points
     val pointsB = b.points
-    val sepA = pointsA.map(b.contains)
-    if (sepA.reduceLeft(_ || _))
-      true
-    else {
-      val sepB = pointsB.map(a.contains)
-      sepB.reduceLeft(_ || _)
-    }
+    pointsA.exists(b.contains) || pointsB.exists(a.contains)
   }
 }

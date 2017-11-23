@@ -1,11 +1,8 @@
 package com.mikeyu123.gunplay_physics.structs
 
-
-case class PhysicsProperties(contactGroup: Int, motion: Motion) {
+case class PhysicsProperties(motion: Motion) {
 
   def setMotion(motion: Motion): PhysicsProperties = {
-    PhysicsProperties(contactGroup, motion)
+    PhysicsProperties(motion)
   }
-
-  //  def emptyContact
 }

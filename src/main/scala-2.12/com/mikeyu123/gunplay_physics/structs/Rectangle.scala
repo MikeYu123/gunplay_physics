@@ -42,17 +42,15 @@ case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point)
     val p: Set[Point] = points
     val firstMinMax: (Point, Point) = (point1, point1)
     val (a: Point, b: Point) =
-      p.foldLeft(firstMinMax)((minMax, p) => (minMax._1.min(p), minMax._2.max(p)) )
+      p.foldLeft(firstMinMax)((minMax, p) => (minMax._1.bottemLeftCorner(p), minMax._2.topRightCorner(p)) )
     AABB(a, b)
   }
 
   def debugToString: String = {
     "Rect(" + center.x + ", " + center.y+")"
   }
-
   def contains(point: Point): Boolean = {
     val lines = Set(LineSegment(point1, point2), LineSegment(point2, point3))
-    val projection = lines.map(_.projectsOn(point))
-    projection.reduceLeft(_ && _)
+    lines.forall(_.projectsOn(point))
   }
 }
