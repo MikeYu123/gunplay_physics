@@ -7,7 +7,9 @@ import com.mikeyu123.gunplay_physics.util.DebugToString
   */
 //FIXME hard dependency on point order
 // !!!clockwise order!!!
-case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point) extends GeometryPrimitive{
+case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point) extends GeometryPrimitive {
+
+  //  val children: Set[GeometryPrimitive] = Set(point1, point2, point3, point4)
 
   def lines: Set[LineSegment] = {
     Set(
@@ -18,16 +20,20 @@ case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point)
     )
   }
 
-  def move(dx: Double, dy: Double): Rectangle = {
-    move(Vector(dx, dy))
-  }
-
   def move(vector: Vector): Rectangle = {
     Rectangle(point1 + vector, point2 + vector, point3 + vector, point4 + vector)
   }
 
-  def rotate(center: Point, radians: Double): Rectangle = {
-    Rectangle(point1.rotate(center, radians), point2.rotate(center, radians), point3.rotate(center, radians), point4.rotate(center, radians))
+  def move(dx: Double, dy: Double): Rectangle = {
+    move(Vector(dx, dy))
+  }
+
+  def rotate(radians: Double, center: Point): Rectangle = {
+    Rectangle(point1.rotate(radians, center), point2.rotate(radians, center), point3.rotate(radians, center), point4.rotate(radians, center))
+  }
+
+  def move(motion: Motion, center: Point): Rectangle = {
+    Rectangle(point1.move(motion, center), point2.move(motion, center), point3.move(motion, center), point4.move(motion, center))
   }
 
   def center: Point = {
@@ -42,15 +48,17 @@ case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point)
     val p: Set[Point] = points
     val firstMinMax: (Point, Point) = (point1, point1)
     val (a: Point, b: Point) =
-      p.foldLeft(firstMinMax)((minMax, p) => (minMax._1.bottemLeftCorner(p), minMax._2.topRightCorner(p)) )
+      p.foldLeft(firstMinMax)((minMax, p) => (minMax._1.bottemLeftCorner(p), minMax._2.topRightCorner(p)))
     AABB(a, b)
   }
 
   def debugToString: String = {
-    "Rect(" + center.x + ", " + center.y+")"
+    "Rect(" + center.x + ", " + center.y + ")"
   }
+
   def contains(point: Point): Boolean = {
     val lines = Set(LineSegment(point1, point2), LineSegment(point2, point3))
     lines.forall(_.projectsOn(point))
   }
+
 }

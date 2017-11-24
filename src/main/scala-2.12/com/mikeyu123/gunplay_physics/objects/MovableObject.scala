@@ -11,12 +11,11 @@ case class MovableObject(shape: GeometryPrimitive, center: Point, properties: Ph
   }
 
   def rotate(radians: Double): PhysicsObject = {
-    MovableObject(shape.rotate(center, radians), center, properties, id)
+    MovableObject(shape.rotate(radians, center), center, properties, id)
   }
 
-  //TODO: perenesti v Shape
   def applyMotion(motion: Motion): PhysicsObject = {
-    move(motion.path).rotate(motion.rotation)
+    MovableObject(shape.move(motion, center), center + motion.path, properties, id)
   }
 
   def applyMotion: PhysicsObject = {

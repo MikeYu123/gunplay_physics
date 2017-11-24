@@ -16,11 +16,11 @@ case class ImmovableObject(shape: GeometryPrimitive, center: Point, properties: 
   }
 
   def rotate(radians: Double): PhysicsObject = {
-    ImmovableObject(shape.rotate(center, radians), center, properties, id)
+    ImmovableObject(shape.rotate(radians, center), center, properties, id)
   }
 
   def applyMotion(motion: Motion): PhysicsObject = {
-    move(motion.path).rotate(motion.rotation)
+    ImmovableObject(shape.move(motion, center), center + motion.path, properties, id)
   }
 
   def applyMotion: PhysicsObject = {

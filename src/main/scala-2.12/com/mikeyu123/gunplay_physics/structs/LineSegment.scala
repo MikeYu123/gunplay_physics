@@ -65,23 +65,10 @@ case class LineSegment(start: Point, end: Point) {
     0 <= dot && dot <= len
   }
 
-  //TODO: refactor
   def direction(point: Point): Double = {
     val (v0, v1) = (toVector, point - start)
     v0.pseudoScalar(v1)
   }
-
-//  def intersects(lineSegment: LineSegment): Boolean = {
-//    val d0 = direction(lineSegment.start)
-//    val d1 = direction(lineSegment.end)
-//    val d2 = lineSegment.direction(start)
-//    val d3 = lineSegment.direction(end)
-//    (d0 * d1 < 0 || d2 * d3 < 0) ||
-//      (d0 == 0 && projectsOn(lineSegment.start)) ||
-//      (d1 == 0 && projectsOn(lineSegment.end)) ||
-//      (d2 == 0 && lineSegment.projectsOn(start)) ||
-//      (d3 == 0 && lineSegment.projectsOn(end))
-//  }
 
   def intersection(lineSegment: LineSegment): Point = {
     val (a1, a2) = (start.y - end.y, lineSegment.start.y - lineSegment.end.y)

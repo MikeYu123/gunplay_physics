@@ -25,7 +25,7 @@ abstract class PhysicsObject {
   def setMotion(motion: Motion): PhysicsObject
 
   def setMotion(path: Vector): PhysicsObject = {
-    setMotion(Motion(path, properties.motion.rotation))
+    setMotion(Motion(path, properties.motion.radians))
   }
 
   def aabb: AABB = {
