@@ -54,6 +54,7 @@ class ContactSolverMethods extends GraphicsSpec {
   }
 
   it should "getContactTime test 0" in {
+    //+
     val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
     val pr1 = PhysicsProperties(Motion(Vector(1, 3), 0))
     val p0 = MovableObject(r0, r0.center, pr0)
@@ -64,6 +65,7 @@ class ContactSolverMethods extends GraphicsSpec {
   }
 
   it should "getContactTime test 1" in {
+    //+
     val pr0 = PhysicsProperties(Motion(Vector(2, 0), 0))
     val pr1 = PhysicsProperties(Motion(Vector(-1, 1), 0))
     val p0 = MovableObject(r2, r2.center, pr0)
@@ -93,6 +95,7 @@ class ContactSolverMethods extends GraphicsSpec {
     val res: ContactSolver = ContactSolver(p0, p1).getContactTime
     (res.contactTime, res.contact.normal) should equal((0.2, Vector(-1, -1).normalize))
   }
+
   it should "solve test 0" in {
     val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
     val pr1 = PhysicsProperties(Motion(Vector(1, 3), 0))
@@ -159,19 +162,19 @@ class ContactSolverMethods extends GraphicsSpec {
     res.head.correction.contactTime should equal(1 / 3.0)
   }
 
+  it should "solve test24" in {
+    val obj0 = PhysicsObjectFactory.spawnPhOb(0, 0, 1, 0).applyMotion
+    val obj2 = PhysicsObjectFactory.spawnPhOb(1.5, 1.5, -1, -1).applyMotion
+    val con = Contact(obj0, obj2)
+    val res = ContactSolver.solve(con)
+    res.head.correction.contactTime should equal(1 / 2.0)
+  }
+
   def time[R](block: => R): R = {
     val t0 = System.nanoTime()
     val result = block // call-by-name
     val t1 = System.nanoTime()
     println("Elapsed time: " + (t1 - t0) + "ns")
     result
-  }
-
-  it should "solve test24" in {
-    val obj0 = PhysicsObjectFactory.spawnPhOb(0, 0, 1, 0).applyMotion
-    val obj2 = PhysicsObjectFactory.spawnPhOb(1.5, 1.5, -1, -1).applyMotion
-    val con = Contact(obj0, obj2)
-    val res = ContactSolver.solve(con)
-//    res.head.correction.contactTime should equal(1 / 2.0)
   }
 }

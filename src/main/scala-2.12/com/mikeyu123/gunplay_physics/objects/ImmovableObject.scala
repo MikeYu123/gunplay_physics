@@ -4,11 +4,6 @@ import java.util.UUID
 
 import com.mikeyu123.gunplay_physics.structs.{GeometryPrimitive, Motion, PhysicsProperties, Point, Vector}
 
-//object ImmovableObject {
-//  def apply(shape: GeometryPrimitive, center: Point, properties: PhysicsProperties, id:UUID): ImmovableObject =
-//    new ImmovableObject(shape, center, properties)
-//}
-
 case class ImmovableObject(shape: GeometryPrimitive, center: Point, properties: PhysicsProperties, id: UUID = UUID.randomUUID()) extends PhysicsObject {
 
   def move(vector: Vector): PhysicsObject = {

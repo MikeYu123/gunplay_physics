@@ -66,6 +66,8 @@ object ContactSolver {
 
 case class ContactSolver(contact: Contact, contactTime: Double = 1) {
 
+  val (a, b) = (contact.a, contact.b)
+
   def afterContactPath(physicsObject: PhysicsObject): Vector = {
     contact.normal * (contactTime * (physicsObject.properties.motion.path * contact.normal))
   }
@@ -83,21 +85,30 @@ case class ContactSolver(contact: Contact, contactTime: Double = 1) {
   }
 
   def getContactTime: ContactSolver = {
-    val (a, b) = (contact.a, contact.b)
-
     val correctionVectorA = getCorrectionVector(a, b)
     val correctionVectorB = getCorrectionVector(b, a)
-    val convergence = (a, b) match {
-      case (_: MovableObject, _: ImmovableObject) => a.properties.motion.path
-      case _ => a.properties.motion.path - b.properties.motion.path
-    }
+    getContactTime(correctionVectorA, correctionVectorB)
+  }
 
-    val (contactTimeA, normalA) = getProjection(correctionVectorA, convergence)
-    val (contactTimeB, normalB) = getProjection(correctionVectorB, convergence)
-    contactTimeA < contactTimeB match {
-      case true => ContactSolver(contact.setNormal(normalA), contactTimeA)
-      case false => ContactSolver(contact.setNormal(normalB), contactTimeB)
+  def getContactTime(correctionVectorA: CorrectionVector, correctionVectorB: CorrectionVector): ContactSolver = {
+    val (contactTimeA, normalA) = getContactTime(correctionVectorA)
+    val (contactTimeB, normalB) = getContactTime(correctionVectorB)
+    if (contactTimeA < contactTimeB)
+      ContactSolver(contact.setNormal(normalA), contactTimeA)
+    else
+      ContactSolver(contact.setNormal(normalB), contactTimeB)
+  }
+
+  def getContactTime(correctionVector: CorrectionVector): (Double, Vector) = {
+    val convergenceA = getConvergence(correctionVector, a.properties.motion.path)
+    val convergenceB = (a, b) match {
+      case (_: MovableObject, _: ImmovableObject) => Vector(0, 0)
+      case _ => getConvergence(correctionVector, b.properties.motion.path)
     }
+    val projectionA = convergenceA.compareProjection(correctionVector.vector)
+    val projectionB = convergenceB.compareProjection(correctionVector.vector)
+
+    (1d / (projectionA + projectionB), correctionVector.normal)
   }
 
   def getCorrectionVector(a: PhysicsObject, b: PhysicsObject): CorrectionVector = {
@@ -132,15 +143,16 @@ case class ContactSolver(contact: Contact, contactTime: Double = 1) {
   }
 
   def getCorrectionVector(rectangle: Rectangle, points: Set[Point], path: Vector): CorrectionVector = {
-    val corrections = points.foldLeft(Set[CorrectionVector]()) { (set, point) =>
-      val projection: LineSegment = LineSegment(point, path)
-      val intersections: Set[(Point, Vector)] = rectangle.lines.collect {
-        case side if projection.willIntersect(side) => (side.intersection(projection), side.toVector)
-      }
-      val corrs: Set[CorrectionVector] = intersections.collect {
-        case int if rectangle.contains(int._1) => CorrectionVector(projection.start - int._1, int._2)
-      }
-      set ++ corrs
+    val corrections = points.foldLeft(Set[CorrectionVector]()) {
+      (set, point) =>
+        val projection: LineSegment = LineSegment(point, path)
+        val intersections: Set[(Point, Vector)] = rectangle.lines.collect {
+          case side if projection.willIntersect(side) => (side.intersection(projection), side.toVector)
+        }
+        val corrs: Set[CorrectionVector] = intersections.collect {
+          case int if rectangle.contains(int._1) => CorrectionVector(projection.start - int._1, int._2)
+        }
+        set ++ corrs
     }
     reduceVectors(corrections)
   }
@@ -158,5 +170,9 @@ case class ContactSolver(contact: Contact, contactTime: Double = 1) {
       case (true, false) => (0, correctionVector.normal)
       case _ => (time, correctionVector.normal)
     }
+  }
+
+  def getConvergence(correctionVector: CorrectionVector, path: Vector): Vector = {
+    correctionVector.vector.project(path)
   }
 }

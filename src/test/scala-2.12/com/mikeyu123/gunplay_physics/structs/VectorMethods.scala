@@ -49,4 +49,23 @@ class VectorMethods extends GraphicsSpec {
   it should "abs test 0" in {
     Vector(-2, 0).abs should equal(Vector(2, 0))
   }
+
+  it should "project test 0" in {
+    Vector(1, 1).project(Vector(3, 2)) should equal(Vector(2, 2))
+  }
+
+  it should "project test 1" in {
+    val res =  Vector(1, 0).project(Vector(3, 2))
+    res should equal(Vector(3, 0))
+  }
+
+  it should "project test 2" in {
+    val res =  Vector(2, 1).project(Vector(3, 2))
+    res should equal(Vector(3, 1.5))
+  }
+
+  it should "project test 3" in {
+    val res =  Vector(0, 1).project(Vector(3, 2))
+    res should equal(Vector(0, 2))
+  }
 }
