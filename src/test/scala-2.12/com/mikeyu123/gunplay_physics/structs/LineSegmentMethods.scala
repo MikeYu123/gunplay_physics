@@ -95,39 +95,6 @@ class LineSegmentMethods extends GraphicsSpec {
     }
   }
 
-//  it should "intersection line test 0" in {
-//    val l0 = LineSegment(Point(0, 0), Point(5, 0))
-//    val l1 = LineSegment(Point(0, 0), Point(5, 1))
-//    l0.intersects(l1) should equal {
-//      true
-//    }
-//  }
-//
-//  it should "intersection line test 1" in {
-//    val l0 = LineSegment(Point(0, 0), Point(5, 0))
-//    val l1 = LineSegment(Point(3, 0), Point(5, 1))
-//    l1.intersects(l0) should equal {
-//      true
-//    }
-//  }
-//
-//  it should "intersection line test 2" in {
-//    val l0 = LineSegment(Point(0, 0), Point(5, 0))
-//    val l1 = LineSegment(Point(1, -1), Point(5, 1))
-//    l1.intersects(l0) should equal {
-//      true
-//    }
-//  }
-//
-//  it should "intersection line test 3" in {
-//    val l0 = LineSegment(Point(0, 0), Point(5, 0))
-//    val l1 = LineSegment(Point(1, 1), Point(5, 1))
-//    val res = l1.intersects(l0)
-//    res should equal {
-//      false
-//    }
-//  }
-
   it should "intersection line test 4" in {
     val l0 = LineSegment(Point(1, 1), Point(5, 3))
     val l1 = LineSegment(Point(2, 3), Point(5, 0))
@@ -183,7 +150,7 @@ class LineSegmentMethods extends GraphicsSpec {
   }
 
   it should "intersection line test 9" in {
-    val l0 = LineSegment(Point(2, 1),Point(1, 2))
+    val l0 = LineSegment(Point(2, 1), Point(1, 2))
     val l1 = LineSegment(Point(0, 0), Point(5, 0))
     val res = l0.willIntersect(l1)
     res should equal {
@@ -191,4 +158,17 @@ class LineSegmentMethods extends GraphicsSpec {
     }
   }
 
+  it should "toVector line test 0" in {
+    val l0 = LineSegment(Point(2, 1), Point(1, 2))
+    l0.toVector should equal {
+      Vector(-1, 1)
+    }
+  }
+
+  it should "move line test 0" in {
+    val l0 = LineSegment(Point(2, 1), Point(1, 2))
+    l0.move(1, 1) should equal {
+      LineSegment(Point(3, 2), Point(2, 3))
+    }
+  }
 }

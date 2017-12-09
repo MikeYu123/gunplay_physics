@@ -26,4 +26,6 @@ class RectangleMethods extends GraphicsSpec {
       false
     }
   }
+
+
 }

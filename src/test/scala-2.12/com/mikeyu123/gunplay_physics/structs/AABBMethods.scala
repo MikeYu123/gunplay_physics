@@ -71,4 +71,11 @@ class AABBMethods extends GraphicsSpec {
     val res = aabb0 + aabb1
     res should equal(AABB(0, -1, 3, 2))
   }
+
+  it should "render diagonal" in {
+    AABB(Point(0, 0), Point(2, 2)).diagonal should equal(
+      Vector(2, 2)
+    )
+  }
+
 }

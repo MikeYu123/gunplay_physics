@@ -7,8 +7,6 @@ abstract class GeometryPrimitive extends DebugToString {
 
   def center: Point
 
-//  val children: Set[GeometryPrimitive]
-
   def aabb: AABB
 
   def move(path: Vector): GeometryPrimitive

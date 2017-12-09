@@ -14,7 +14,5 @@ case class GeometryStub(d: Double) extends GeometryPrimitive {
 
   override def move(motion: Motion, center: Point): GeometryPrimitive = ???
 
-//  override val children: Set[GeometryPrimitive] = Set()
-
   override def move(dx: Double, dy: Double): GeometryPrimitive = ???
 }

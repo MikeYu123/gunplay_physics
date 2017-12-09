@@ -1,5 +1,7 @@
 package com.mikeyu123.gunplay_physics.structs
 
+import java.util.UUID
+
 import com.mikeyu123.gunplay_physics.GraphicsSpec
 import com.mikeyu123.gunplay_physics.util.ContactHandler
 import org.scalatest.Matchers._
@@ -147,13 +149,40 @@ class ContactMethods extends GraphicsSpec {
     res should equal(m1)
   }
 
-  it should "equals test 0" in {
-    val m0 = PhysicsObjectFactory.spawnStOb(0)
-    val m1 = PhysicsObjectFactory.spawnStOb(1)
-    val c0 = Contact(m0, m1)
-    val m2 = PhysicsObjectFactory.spawnStOb(0)
-    val m3 = PhysicsObjectFactory.spawnStOb(1)
-    val c1 = Contact(m2, m3)
-    //    c0 should equal (c1)
+  it should "hasObject test 0" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(1)
+    val c = Contact(m0, m1)
+    c.hasObject(m0.id) should equal(true)
+  }
+
+  it should "hasObject test 1" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(1)
+    val c = Contact(m0, m1)
+    c.hasObject(m0.id) should equal(true)
+  }
+
+  it should "swapObject test 0" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(1)
+    val m2 = PhysicsObjectFactory.spawnPhOb(2)
+    val c = Contact(m0, m1)
+    c.swapSubject(m1, m2) should equal(Contact(m0, m2))
+  }
+
+  it should "swapObject test 1" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(1)
+    val m2 = PhysicsObjectFactory.spawnPhOb(2)
+    val c = Contact(m0, m1)
+    c.swapSubject(m0, m2) should equal(Contact(m1, m2))
+  }
+
+  it should "setNormal test 0" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(1)
+    val c = Contact(m0, m1)
+    c.setNormal(Vector(1, 0)) should equal(Contact(Set(m0, m1), Vector(1, 0)))
   }
 }

@@ -35,7 +35,6 @@ case class Contact(ab: Set[PhysicsObject], normal: Vector, state: ContactState =
       (some) =>
         Contact(ab - old + next, normal)
     }
-
   }
 
   def hasObject(uUID: UUID): Boolean = {

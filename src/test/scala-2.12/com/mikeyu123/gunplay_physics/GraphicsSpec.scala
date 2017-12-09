@@ -1,7 +1,7 @@
 package com.mikeyu123.gunplay_physics
 
-import com.mikeyu123.gunplay_physics.objects.GraphicsObject
-import com.mikeyu123.gunplay_physics.structs.{Point, Rectangle}
+import com.mikeyu123.gunplay_physics.objects.{GraphicsObject, MovableObject, PhysicsObject}
+import com.mikeyu123.gunplay_physics.structs.{GeometryPrimitive, Point, Rectangle}
 import org.scalactic.{Equality, TolerantNumerics}
 import org.scalatest.FlatSpec
 
@@ -37,6 +37,25 @@ trait GraphicsSpec extends FlatSpec {
     b match {
       case p: GraphicsObject => a.rectangle === p.rectangle &&
         a.center === p.center
+      case _ => false
+    }
+  }
+
+  def physicsObjectEq: Equality[PhysicsObject] = (a: PhysicsObject, b: Any) => {
+    implicit val geometryPrimitiveEquality: Equality[GeometryPrimitive] = geometryPrimitiveEq
+    implicit val pointEquality: Equality[Point] = pointEq
+    b match {
+      case p: PhysicsObject => a.shape === p.shape &&
+        a.center === p.center
+      case _ => false
+    }
+  }
+
+  def geometryPrimitiveEq: Equality[GeometryPrimitive] = (a: GeometryPrimitive, b: Any) => {
+    (a, b) match {
+      case (aa: Rectangle, bb: Rectangle) =>
+        implicit val rectangleEquality: Equality[Rectangle] = rectangleEq
+        aa === bb
       case _ => false
     }
   }

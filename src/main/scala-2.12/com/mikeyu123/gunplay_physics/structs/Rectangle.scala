@@ -5,11 +5,18 @@ import com.mikeyu123.gunplay_physics.util.DebugToString
 /**
   * Created by mihailurcenkov on 09.07.17.
   */
+
+
+object Rectangle {
+  def apply(center: Point, width: Double, height: Double): Rectangle = {
+    val (w, h) = (width / 2, height / 2)
+    Rectangle(center + Vector(-w, -h), center + Vector(-w, h), center + Vector(w, h), center + Vector(w, -h))
+  }
+}
+
 //FIXME hard dependency on point order
 // !!!clockwise order!!!
 case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point) extends GeometryPrimitive {
-
-  //  val children: Set[GeometryPrimitive] = Set(point1, point2, point3, point4)
 
   def lines: Set[LineSegment] = {
     Set(
@@ -60,5 +67,4 @@ case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point)
     val lines = Set(LineSegment(point1, point2), LineSegment(point2, point3))
     lines.forall(_.projectsOn(point))
   }
-
 }

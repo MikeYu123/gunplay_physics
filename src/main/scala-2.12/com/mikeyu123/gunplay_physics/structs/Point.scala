@@ -18,11 +18,11 @@ case class Point(x: Double, y: Double) extends GeometryPrimitive {
   }
 
   def rotate(radians: Double, center: Point): Point = {
-    move(Motion(Vector(0,0), radians), center)
+    move(Motion(Vector(0, 0), radians), center)
   }
 
   def move(motion: Motion, center: Point): Point = {
-    val (cos, sin) = (Math.cos(motion.radians), Math.sin(motion.radians))
+    val (cos, sin) = (math.cos(motion.radians), math.sin(motion.radians))
     val newX = center.x + (x - center.x) * cos - (y - center.y) * sin + motion.path.dx
     val newY = center.y + (y - center.y) * cos + (x - center.x) * sin + motion.path.dy
     Point(newX, newY)
@@ -37,11 +37,11 @@ case class Point(x: Double, y: Double) extends GeometryPrimitive {
   }
 
   def bottemLeftCorner(b: Point): Point = { // (2, 5).min((3,4)) = (2, 4)
-    Point(Math.min(x, b.x), Math.min(y, b.y))
+    Point(math.min(x, b.x), math.min(y, b.y))
   }
 
   def topRightCorner(b: Point): Point = {
-    Point(Math.max(x, b.x), Math.max(y, b.y))
+    Point(math.max(x, b.x), math.max(y, b.y))
   }
 
   def debugToString: String = ???

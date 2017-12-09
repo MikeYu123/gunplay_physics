@@ -1,6 +1,8 @@
 package com.mikeyu123.gunplay_physics.structs
 
 import com.mikeyu123.gunplay_physics.objects.PhysicsObject
+
+import scala.collection.TraversableLike
 //import scala.collection.{Set, Iterable}
 
 object QTree {

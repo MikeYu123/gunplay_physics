@@ -7,7 +7,6 @@ class CorrectionVectorMethods extends GraphicsSpec {
 
   it should "reverse test 0" in {
     val vec = CorrectionVector(Vector(1, 1), Vector(23, 0))
-
     vec.reverseVector.vector should equal(Vector(-1, -1))
   }
 

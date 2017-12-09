@@ -13,10 +13,19 @@ class PointMethods extends GraphicsSpec {
     Point(1d, 1d).topRightCorner(Point(0d, 2d)) should equal(Point(1d, 2d))
   }
 
-//  it should "nearest test" in {
-//    val p0 = Point(0, 0)
-//    val p1 = Point(2, 0)
-//    val p2 = Point(3, 0)
-//    p0.nearest(p1, p2) should equal(Point(2, 0))
-//  }
+  it should "center test" in {
+    Point(1d, 1d).center should equal(Point(1d, 1d))
+  }
+
+  it should "aabb test" in {
+    Point(1d, 1d).aabb should equal(AABB(Point(1d, 1d), Point(1d, 1d)))
+  }
+
+  it should "move test 0" in {
+    Point(1d, 1d).move(Vector(1, 1)) should equal(Point(2, 2))
+  }
+
+  it should "move test 1" in {
+    Point(1d, 1d).move(Motion(Vector(1, 1), 0), Point(1, 1)) should equal(Point(2, 2))
+  }
 }

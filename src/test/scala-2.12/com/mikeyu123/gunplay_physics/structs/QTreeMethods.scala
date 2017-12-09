@@ -43,7 +43,6 @@ class QTreeMethods extends GraphicsSpec {
     }
   }
 
-
   it should "traverse test" in {
     val qTree: QTree = setup
     val tr = qTree.traverse
@@ -62,12 +61,40 @@ class QTreeMethods extends GraphicsSpec {
     }
   }
 
+  val o0 = PhysicsObjectFactory.spawnPhOb(1, 1)
+  val o1 = PhysicsObjectFactory.spawnPhOb(4, 1)
+  val o2 = PhysicsObjectFactory.spawnPhOb(1, 4)
+  val o3 = PhysicsObjectFactory.spawnPhOb(4, 4)
+  val o4 = PhysicsObjectFactory.spawnPhOb(4, 5)
 
-  it should "subset test" in {
-    val qTree: QTree = setup
-    val tr = qTree.traverse
+  def setup0: QTree = {
+    val set = Set(o0, o1, o2, o3, o4)
+    QTree(set, Set(), AABB(0, 0, 6, 6), 4, 4)
+  }
 
-    val q = tr.last
-    val w = s.subsets(2)
+  it should "subdivide test" in {
+    val tree = setup0
+    val res = tree.subdivide
+    val target = Set(
+      Set(o0),
+      Set(o1),
+      Set(o2),
+      Set(o3, o4)
+    )
+    res.traverse should equal(target)
+  }
+
+  it should "getByAabb test 0" in {
+    val tree = setup0
+    tree.getByAabb(AABB(3, 0, 6, 6)) should equal {
+      Set(o1, o3, o4)
+    }
+  }
+
+  it should "getByAabb test 1" in {
+    val tree = setup0
+    tree.getByAabb(AABB(1, 4, 4, 6)) should equal {
+      Set(o2, o3, o4)
+    }
   }
 }
