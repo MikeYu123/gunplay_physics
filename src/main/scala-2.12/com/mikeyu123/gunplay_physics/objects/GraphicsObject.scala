@@ -15,6 +15,6 @@ case class GraphicsObject(rectangle: Rectangle, center: Point) {
   }
 
   def rotate(degrees: Double) : GraphicsObject = {
-    GraphicsObject(rectangle.rotate(center, degrees), center)
+    GraphicsObject(rectangle.rotate(degrees, center), center)
   }
 }
