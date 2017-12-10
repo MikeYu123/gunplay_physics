@@ -51,14 +51,12 @@ object ContactSolver {
     val b = contact.b
     val solver = new ContactSolver(contact)
     (a, b) match {
-      case (_: MovableObject, _: MovableObject) => {
+      case (_: MovableObject, _: MovableObject) =>
         val solution = solver.getContactTime
         solution.entries(a, b)
-      }
       case (_: MovableObject, _: ImmovableObject) |
-           (_: MovableObject, _: StaticObject) => {
+           (_: MovableObject, _: StaticObject) =>
         solver.getContactTime.entries(a)
-      }
       case _ => Set()
     }
   }
@@ -164,13 +162,13 @@ case class ContactSolver(contact: Contact, contactTime: Double = 1) {
     }
   }
 
-  def getProjection(correctionVector: CorrectionVector, convergence: Vector): (Double, Vector) = {
-    val time = correctionVector.vector.compareProjection(convergence)
-    (time.isInfinite, correctionVector.normal.isZero) match {
-      case (true, false) => (0, correctionVector.normal)
-      case _ => (time, correctionVector.normal)
-    }
-  }
+  //  def getProjection(correctionVector: CorrectionVector, convergence: Vector): (Double, Vector) = {
+  //    val time = correctionVector.vector.compareProjection(convergence)
+  //    (time.isInfinite, correctionVector.normal.isZero) match {
+  //      case (true, false) => (0, correctionVector.normal)
+  //      case _ => (time, correctionVector.normal)
+  //    }
+  //  }
 
   def getConvergence(correctionVector: CorrectionVector, path: Vector): Vector = {
     correctionVector.vector.project(path)

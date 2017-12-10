@@ -1,7 +1,7 @@
 package com.mikeyu123.gunplay_physics.util
 
 import com.mikeyu123.gunplay_physics.GraphicsSpec
-import com.mikeyu123.gunplay_physics.objects.{ImmovableObject, MovableObject, PhysicsObject}
+import com.mikeyu123.gunplay_physics.objects.{ImmovableObject, MovableObject, PhysicsObject, StaticObject}
 import com.mikeyu123.gunplay_physics.structs._
 import org.scalatest.Matchers._
 
@@ -147,6 +147,35 @@ class ContactSolverMethods extends GraphicsSpec {
     val con = Contact(p1, p0)
     val res = ContactSolver.solve(con)
     res.head.correction.contactTime should equal(1 / 3.0)
+  }
+
+  it should "solve test222" in {
+    val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
+    val pr1 = PhysicsProperties(Motion(Vector(1, 3), 0))
+    val st0 = PhysicsObjectFactory.spawnPhOb(0)
+    val st1 = PhysicsObjectFactory.spawnPhOb(2)
+//    val p0 = MovableObject(r0, r0.center, pr0)
+//    val p1 = ImmovableObject(r1, r1.center, pr1)
+    val con = Contact(st0, st0)
+    val res = ContactSolver.solve(con)
+    res.head.correction.contactTime should equal(Double.PositiveInfinity)
+  }
+
+  it should "solve test221" in {
+    val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
+    val p0 = MovableObject(r0, r0.center, pr0)
+    val p1 = StaticObject(r1, r1.center)
+    val con = Contact(p1, p0)
+    val res = ContactSolver.solve(con)
+    res.head.correction.contactTime should equal(1 / 3.0)
+  }
+
+  it should "solve test23" in {
+    val p0 = StaticObject(r0, r0.center)
+    val p1 = StaticObject(r1, r1.center)
+    val con = Contact(p1, p0)
+    val res = ContactSolver.solve(con)
+    res.size should equal(0)
   }
 
   it should "solve test220" in {

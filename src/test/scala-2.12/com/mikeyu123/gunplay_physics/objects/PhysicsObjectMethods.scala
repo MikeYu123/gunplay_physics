@@ -11,9 +11,14 @@ class PhysicsObjectMethods extends GraphicsSpec {
   val rect = Rectangle(Point(0, 0), Point(0, 1), Point(1, 1), Point(1, 0))
   val mObj = MovableObject(rect, Point(0.5, 0.5), PhysicsProperties(Motion(Vector(0, 0), 0)))
 
+  it should "toString movable" in {
+    mObj.toString should equal(rect.debugToString)
+  }
+
   it should "move movable" in {
     mObj.move(Vector(1, 0)).shape should equal(Rectangle(Point(1.5, 0.5), 1, 1))
   }
+
 
   it should "rotate movable" in {
     val sqr = Math.sqrt(2) / 2
@@ -33,6 +38,13 @@ class PhysicsObjectMethods extends GraphicsSpec {
     val motion = Motion(Vector(1, 0), math.Pi / 2)
     mObj.setMotion(motion).applyMotion.shape should equal {
       Rectangle(Point(2.0, -5.551115123125783E-17), Point(1.0, 0.0), Point(1.0, 1.0), Point(2.0, 1.0))
+    }
+  }
+
+  it should "setMoiton movable 0" in {
+    val path = Vector(1, 0)
+    mObj.setMotion(path).applyMotion.shape should equal {
+      Rectangle(Point(1, 0), Point(1, 1), Point(2, 1), Point(2, 0))
     }
   }
 
@@ -63,6 +75,13 @@ class PhysicsObjectMethods extends GraphicsSpec {
     }
   }
 
+  it should "setMoiton immovable 0" in {
+    val path = Vector(1, 0)
+    imObj.setMotion(path).applyMotion.shape should equal {
+      Rectangle(Point(1, 0), Point(1, 1), Point(2, 1), Point(2, 0))
+    }
+  }
+
   val stObj = StaticObject(rect, Point(0.5, 0.5))
 
   it should "move static" in {
@@ -86,6 +105,13 @@ class PhysicsObjectMethods extends GraphicsSpec {
   it should "setMoiton static" in {
     val motion = Motion(Vector(1, 0), math.Pi / 2)
     stObj.setMotion(motion).applyMotion should equal {
+      stObj
+    }
+  }
+
+  it should "setMoiton static 0" in {
+    val path = Vector(1, 0)
+    stObj.setMotion(path).applyMotion should equal {
       stObj
     }
   }

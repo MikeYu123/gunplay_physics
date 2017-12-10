@@ -30,9 +30,9 @@ abstract class PhysicsObject {
     shape.aabb
   }
 
-  def revert(time: Double): PhysicsObject = {
-    move(properties.motion.path.reverse * time)
-  }
+//  def revert(time: Double): PhysicsObject = {
+//    move(properties.motion.path.reverse * time)
+//  }
 
   override def toString: String = shape.debugToString
 }

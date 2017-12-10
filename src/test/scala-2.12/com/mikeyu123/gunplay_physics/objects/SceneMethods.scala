@@ -3,7 +3,7 @@ package com.mikeyu123.gunplay_physics.objects
 import java.util.UUID
 
 import com.mikeyu123.gunplay_physics.GraphicsSpec
-import com.mikeyu123.gunplay_physics.structs.{Contact, ContactListener, PhysicsObjectFactory, SceneProperties, Vector}
+import com.mikeyu123.gunplay_physics.structs._
 import org.scalatest.Matchers._
 
 class SceneMethods extends GraphicsSpec {
@@ -85,6 +85,11 @@ class SceneMethods extends GraphicsSpec {
 
   it should "create scene" in {
     val scene0 = Scene(objs, SceneProperties(4, 4), contactListener)
-    scene0.objects.size should equal (3)
+    scene0.objects.size should equal(3)
+  }
+
+  it should "getByAabb scene" in {
+    val aabb = AABB(0, 0, 0.5, 2)
+    scene.setQTree(scene.buildTree).objectsByAabb(aabb) should equal(Set(obj0, obj1))
   }
 }

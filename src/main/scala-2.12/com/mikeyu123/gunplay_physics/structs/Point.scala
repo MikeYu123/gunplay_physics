@@ -44,5 +44,7 @@ case class Point(x: Double, y: Double) extends GeometryPrimitive {
     Point(math.max(x, b.x), math.max(y, b.y))
   }
 
-  def debugToString: String = ???
+  def debugToString: String = {
+    "Point(" + x + ", " + y + ")"
+  }
 }

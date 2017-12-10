@@ -42,6 +42,10 @@ class VectorMethods extends GraphicsSpec {
     Vector(2, 0).compareProjection(Vector(4, 1)) should equal(1.0 / 2.0)
   }
 
+  it should "compare projection test 2" in {
+    Vector(2, 0).compareProjection(Vector(0, 2)) should equal(Double.PositiveInfinity)
+  }
+
   it should "normalize test 0" in {
     Vector(2, 0).normalize should equal(Vector(1, 0))
   }

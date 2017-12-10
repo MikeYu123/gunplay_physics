@@ -115,8 +115,30 @@ class ContactHandlerMethods extends GraphicsSpec {
     val res = ContactHandler.handle(objs, AABB(-3, -3, 3, 3), 4, 4, contactListener)
 
     res.objs.size should equal(2)
-    //    print(0)
   }
 
 
+  it should "clear test 0" in {
+    val obj0 = PhysicsObjectFactory.spawnPhOb(0, 0, 1, 0)
+    val obj1 = PhysicsObjectFactory.spawnPhOb(0, 1, 0, -1)
+    val obj2 = PhysicsObjectFactory.spawnPhOb(1.5, 0, -1, 0)
+    val obj3 = PhysicsObjectFactory.spawnPhOb(1.5, 0, -1, 0)
+    val obj4 = PhysicsObjectFactory.spawnPhOb(1.5, 0, -1, 0)
+    val obj5 = PhysicsObjectFactory.spawnPhOb(1.5, 0, -1, 0)
+    val obj6 = PhysicsObjectFactory.spawnPhOb(1.5, 0, -1, 0)
+    val obj7 = PhysicsObjectFactory.spawnPhOb(1.5, 0, -1, 0)
+
+    val contact0 = Contact(obj0, obj1).removeA
+    val contact1 = Contact(obj0, obj2)
+    val contact2 = Contact(obj3, obj1)
+    val contact3 = Contact(obj4, obj5).removeB
+
+    val set = Set(obj0, obj1, obj2, obj3, obj4, obj5, obj6, obj7)
+    val con = Set(contact0, contact1, contact2, contact3)
+
+
+    val handler = ContactHandler(set, con, QTree(set, Set(), AABB(0, 0, 3, 3), 4, 4))
+    val res = handler.clear
+    res.objs.size should equal(6)
+  }
 }

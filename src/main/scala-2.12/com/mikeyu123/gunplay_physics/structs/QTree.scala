@@ -8,8 +8,10 @@ import scala.collection.TraversableLike
 object QTree {
   val default = QTree(Set(), Set(), AABB(0, 0, 0, 0), 0, 0)
 }
+
 //TODO: TraversableLike
-case class QTree(objects: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, capacity: Int, depth: Int) extends Iterable[Set[PhysicsObject]] {
+//case class QTree(objects: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, capacity: Int, depth: Int) extends Iterable[Set[PhysicsObject]] {
+case class QTree(objects: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, capacity: Int, depth: Int) extends Traversable[Set[PhysicsObject]] {
 
   //  TODO possibly refactor via inheritance & matches
   def insert(obj: PhysicsObject): QTree = {
@@ -42,16 +44,20 @@ case class QTree(objects: Set[PhysicsObject], nodes: Set[QTree], aabb: AABB, cap
   }
 
   def getByAabb(aABB: AABB): Set[PhysicsObject] = {
-    val objs: Set[PhysicsObject] = objects.collect{
+    val objs: Set[PhysicsObject] = objects.collect {
       case o if o.aabb.intersects(aABB) => o
     }
     val nodesObjs: Set[Set[PhysicsObject]] = nodes.collect {
       case n if n.aabb.intersects(aABB) => n.getByAabb(aABB)
     }
-    nodesObjs.foldLeft(objs)(_++_)
+    nodesObjs.foldLeft(objs)(_ ++ _)
   }
 
-  override def iterator: Iterator[Set[PhysicsObject]] = {
-    this.traverse.iterator
+  //  override def iterator: Iterator[Set[PhysicsObject]] = {
+  //    this.traverse.iterator
+  //  }
+
+  override def foreach[U](f: (Set[PhysicsObject]) => U): Unit = {
+    traverse.foreach(f)
   }
 }

@@ -45,6 +45,13 @@ class LineSegmentMethods extends GraphicsSpec {
     }
   }
 
+  it should "has test 1" in {
+    val ls = LineSegment(Point(0, 0), Point(0, -2))
+    ls.has(Point(0, -2)) should equal {
+      true
+    }
+  }
+
   it should "normal test 0" in {
     LineSegment(Point(0, 0), Point(2, 0)).normal should equal {
       Vector(0, 1)

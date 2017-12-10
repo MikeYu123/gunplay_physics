@@ -72,6 +72,11 @@ class QTreeMethods extends GraphicsSpec {
     QTree(set, Set(), AABB(0, 0, 6, 6), 4, 4)
   }
 
+  def setup1: QTree = {
+    val set = Set(o0, o1, o2, o3, o4)
+    QTreeBuilder(set, AABB(0, 0, 6, 6), 4, 4)
+  }
+
   it should "subdivide test" in {
     val tree = setup0
     val res = tree.subdivide
@@ -85,15 +90,16 @@ class QTreeMethods extends GraphicsSpec {
   }
 
   it should "getByAabb test 0" in {
-    val tree = setup0
+    val tree = setup1
     tree.getByAabb(AABB(3, 0, 6, 6)) should equal {
       Set(o1, o3, o4)
     }
   }
 
   it should "getByAabb test 1" in {
-    val tree = setup0
-    tree.getByAabb(AABB(1, 4, 4, 6)) should equal {
+    val tree = setup1
+    val res = tree.getByAabb(AABB(1, 4, 4, 6))
+    res should equal {
       Set(o2, o3, o4)
     }
   }

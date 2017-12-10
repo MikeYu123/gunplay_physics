@@ -2,18 +2,31 @@ package com.mikeyu123.gunplay_physics.objects
 
 import java.util.UUID
 
-import com.mikeyu123.gunplay_physics.structs.{AABB, ContactListener, QTree, SceneProperties}
+import com.mikeyu123.gunplay_physics.structs._
 import com.mikeyu123.gunplay_physics.util.ContactHandler
 
-case class Scene(objects: Set[PhysicsObject], properties: SceneProperties,
+
+//object Scene {
+//  def apply(objects: Set[PhysicsObject], properties: SceneProperties = SceneProperties(),
+//            contactListener: ContactListener): Scene = {
+//    val aabb: AABB = objects.foldLeft(AABB(0, 0, 0, 0)) {
+//      (aabb, obj) =>
+//        aabb + obj.aabb
+//    }
+//    val qTree = QTreeBuilder(objects, aabb, properties.capacity, properties.depth)
+//    Scene(objects, properties, contactListener, qTree)
+//  }
+//}
+
+case class Scene(objects: Set[PhysicsObject], properties: SceneProperties = SceneProperties(),
                  contactListener: ContactListener, qTree: QTree = QTree.default) {
 
   def +(physicsObject: PhysicsObject): Scene = {
-    Scene(objects + physicsObject, properties, contactListener)
+    Scene(objects + physicsObject, properties, contactListener, qTree)
   }
 
   def -(physicsObject: PhysicsObject): Scene = {
-    Scene(objects - physicsObject, properties, contactListener)
+    Scene(objects - physicsObject, properties, contactListener, qTree)
   }
 
   def -(uUID: UUID): Scene = {
@@ -30,7 +43,7 @@ case class Scene(objects: Set[PhysicsObject], properties: SceneProperties,
   }
 
   def setObjects(newObjects: Set[PhysicsObject]): Scene = {
-    Scene(newObjects, properties, contactListener)
+    Scene(newObjects, properties, contactListener, qTree)
   }
 
   def step: Scene = {
@@ -46,7 +59,19 @@ case class Scene(objects: Set[PhysicsObject], properties: SceneProperties,
     Scene(objects, properties, contactListener, qTree)
   }
 
-  def getObjectsByAabb(aabb: AABB): Set[PhysicsObject] = {
+  def buildTree: QTree = {
+    buildTree(objects)
+  }
+
+  def buildTree(objects: Set[PhysicsObject]): QTree = {
+    val aabb: AABB = objects.foldLeft(AABB(0, 0, 0, 0)) {
+      (aabb, obj) =>
+        aabb + obj.aabb
+    }
+    QTreeBuilder(objects, aabb, properties.capacity, properties.depth)
+  }
+
+  def objectsByAabb(aabb: AABB): Set[PhysicsObject] = {
     qTree.getByAabb(aabb)
   }
 }

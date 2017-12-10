@@ -149,6 +149,14 @@ class ContactMethods extends GraphicsSpec {
     res should equal(m1)
   }
 
+  it should "other test 1" in {
+    val m0 = PhysicsObjectFactory.spawnStOb(0)
+    val m1 = PhysicsObjectFactory.spawnStOb(1)
+    val c = Contact(m0, m1)
+    var res = c.other(m1)
+    res should equal(m0)
+  }
+
   it should "hasObject test 0" in {
     val m0 = PhysicsObjectFactory.spawnPhOb(0)
     val m1 = PhysicsObjectFactory.spawnPhOb(1)
@@ -185,4 +193,26 @@ class ContactMethods extends GraphicsSpec {
     val c = Contact(m0, m1)
     c.setNormal(Vector(1, 0)) should equal(Contact(Set(m0, m1), Vector(1, 0)))
   }
+
+  it should "state test 0" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(1)
+    val c = Contact(m0, m1)
+    c.removeA should equal(Contact(Set(m0, m1), state = ContactState.RemoveA))
+  }
+
+  it should "state test 1" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(1)
+    val c = Contact(m0, m1)
+    c.removeB should equal(Contact(Set(m0, m1), state = ContactState.RemoveB))
+  }
+
+  it should "state test 2" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(1)
+    val c = Contact(m0, m1)
+    c.remove should equal(Contact(Set(m0, m1), state = ContactState.Remove))
+  }
+
 }

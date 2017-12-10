@@ -13,13 +13,19 @@ class IntersectorDetectorMethods extends GraphicsSpec {
   val r2: Rectangle = r1.move(1, 1)
 
   it should "rect-rect intersection test 0" in {
-    IntersectionDetector.rectRect(r0, r1) should equal {
+    IntersectionDetector.intersects(r0, r1) should equal {
       true
     }
   }
 
   it should "rect-rect intersection test 1" in {
-    IntersectionDetector.rectRect(r0, r2) should equal {
+    IntersectionDetector.intersects(r0, r2) should equal {
+      false
+    }
+  }
+
+  it should "rect-point intersection test 0" in {
+    IntersectionDetector.intersects(r0, Point(0, 0)) should equal {
       false
     }
   }

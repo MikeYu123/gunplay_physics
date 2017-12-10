@@ -8,10 +8,10 @@ import com.mikeyu123.gunplay_physics.structs.ContactState.ContactState
 
 object Contact {
   def apply(a: PhysicsObject, b: PhysicsObject): Contact =
-    Contact(Set(a, b), Vector(0, 0))
+    Contact(Set(a, b))
 }
 
-case class Contact(ab: Set[PhysicsObject], normal: Vector, state: ContactState = ContactState.Default) {
+case class Contact(ab: Set[PhysicsObject], normal: Vector = Vector(0, 0), state: ContactState = ContactState.Default) {
 
   val (a, b) = (ab.head, ab.last) match {
     case (a: ImmovableObject, b: MovableObject) => (b, a)

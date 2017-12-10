@@ -25,6 +25,14 @@ class CorrectionQueueEntryMethods extends GraphicsSpec {
     }
   }
 
+  it should "swap test 1" in {
+    val entry = cs.entry(p0)
+    val p2 = MovableObject(r0, r0.center, pr0)
+    entry.swapSubject(p1, p2) should equal {
+      CorrectionQueueEntry(p0,Correction(Contact(Set[PhysicsObject](p0, p2), entry.correction.contact.normal), entry.correction.afterContactPath, entry.correction.contactTime))
+    }
+  }
+
   it should "toTuple test 0" in{
     val entry = cs.entry(p0)
     entry.toTuple should equal{(p0, cs.correction(p0))}

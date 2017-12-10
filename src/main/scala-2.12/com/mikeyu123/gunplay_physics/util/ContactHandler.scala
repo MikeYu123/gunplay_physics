@@ -6,11 +6,9 @@ import com.mikeyu123.gunplay_physics.objects.PhysicsObject
 import com.mikeyu123.gunplay_physics.structs._
 
 import scala.collection.immutable.HashSet
-//import scala.collection.Set
 
 object ContactHandler {
 
-  //  def handle(objs: Set[PhysicsObject], aabb: AABB, capacity: Int, depth: Int, contactListener: ContactListener): Set[PhysicsObject] = {
   def handle(objs: Set[PhysicsObject], aabb: AABB, capacity: Int, depth: Int, contactListener: ContactListener): ContactHandler = {
     val updatedObjects = objs.map(_.applyMotion)
     val tree = QTreeBuilder(updatedObjects, aabb, capacity, depth)
@@ -36,12 +34,12 @@ object ContactHandler {
     val combinations = getCombinations(set)
     combinations.foldLeft(Set[Contact]()) {
       (set, comb) =>
-        aabbContact(comb._1, comb._2) match {
-          //TODO: fold
-          case c: Some[Contact] => set + c.get
-          case _ => set
-        }
+        aabbContact(comb).fold(set)(set + _)
     }
+  }
+
+  def aabbContact(objectPair: ObjectPair): Option[Contact] = {
+    aabbContact(objectPair.a, objectPair.b)
   }
 
   def aabbContact(a: PhysicsObject, b: PhysicsObject): Option[Contact] = {
@@ -62,20 +60,18 @@ object ContactHandler {
     }
   }
 
-  //TODO: case class
-  def getCombinations(set: Set[PhysicsObject]): Set[Tuple2[PhysicsObject, PhysicsObject]] = {
+  def getCombinations(set: Set[PhysicsObject]): Set[ObjectPair] = {
     val list = set.toList
     val pairs = for {
       phob0 <- list
       subset = subtract(list, phob0)
       phob1 <- subset
     } yield
-      (phob0, phob1)
+      ObjectPair(phob0, phob1)
     pairs.toSet
   }
 
   def getCorrectionsQueue(geometryContacts: Set[Contact]): CorrectionQueue = {
-    //    val corrections = geometryContacts.map(ContactSolver.solve).reduceLeft(_ ++ _)
     val corrections = geometryContacts.foldLeft(Set[CorrectionQueueEntry]()) {
       (res, contact) =>
         res ++ ContactSolver.solve(contact)

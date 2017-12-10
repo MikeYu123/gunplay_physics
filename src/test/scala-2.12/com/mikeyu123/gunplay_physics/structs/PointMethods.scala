@@ -28,4 +28,9 @@ class PointMethods extends GraphicsSpec {
   it should "move test 1" in {
     Point(1d, 1d).move(Motion(Vector(1, 1), 0), Point(1, 1)) should equal(Point(2, 2))
   }
+
+  it should "toString test 0" in {
+    val res = Point(1d, 1d).debugToString
+    res should equal("Point(1.0, 1.0)")
+  }
 }
