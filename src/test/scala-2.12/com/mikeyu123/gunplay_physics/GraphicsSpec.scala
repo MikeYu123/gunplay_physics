@@ -46,7 +46,19 @@ trait GraphicsSpec extends FlatSpec {
     implicit val pointEquality: Equality[Point] = pointEq
     b match {
       case p: PhysicsObject => a.shape === p.shape &&
-        a.center === p.center
+        a.center === p.center &&
+        a.id === p.id
+      case _ => false
+    }
+  }
+
+  def movableObjectEq: Equality[MovableObject] = (a: MovableObject, b: Any) => {
+    implicit val geometryPrimitiveEquality: Equality[GeometryPrimitive] = geometryPrimitiveEq
+    implicit val pointEquality: Equality[Point] = pointEq
+    b match {
+      case p: MovableObject => a.shape === p.shape &&
+        a.center === p.center &&
+        a.id === p.id
       case _ => false
     }
   }

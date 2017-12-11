@@ -5,7 +5,11 @@ import com.mikeyu123.gunplay_physics.objects.PhysicsObject
 case class Correction(contact: Contact, afterContactPath: Vector, contactTime: Double) extends Ordered[Correction] {
 
   def compare(that: Correction): Int = {
-    that.contactTime.compare(contactTime)
+    val res = that.contactTime.compare(contactTime)
+    if (res == 0)
+      if (equals(that)) 0 else 1
+    else
+      res
   }
 
   def correct(physicsObject: PhysicsObject): PhysicsObject = {
