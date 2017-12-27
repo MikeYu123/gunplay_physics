@@ -158,7 +158,8 @@ class ContactSolverMethods extends GraphicsSpec {
 //    val p1 = ImmovableObject(r1, r1.center, pr1)
     val con = Contact(st0, st0)
     val res = ContactSolver.solve(con)
-    res.head.correction.contactTime should equal(Double.PositiveInfinity)
+//    res.head.correction.contactTime should equal(Double.PositiveInfinity)
+    res.size should equal(0)
   }
 
   it should "solve test221" in {

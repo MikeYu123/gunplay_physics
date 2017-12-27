@@ -18,8 +18,8 @@ object Rectangle {
 // !!!clockwise order!!!
 case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point) extends GeometryPrimitive {
 
-  def lines: Set[LineSegment] = {
-    Set(
+  def lines: List[LineSegment] = {
+    List(
       LineSegment(point1, point2),
       LineSegment(point2, point3),
       LineSegment(point3, point4),
@@ -63,8 +63,29 @@ case class Rectangle(point1: Point, point2: Point, point3: Point, point4: Point)
     "Rect(" + center.x + ", " + center.y + ")"
   }
 
+  override def toString: String = debugToString
+
   def contains(point: Point): Boolean = {
-    val lines = Set(LineSegment(point1, point2), LineSegment(point2, point3))
-    lines.forall(_.projectsOn(point))
+    lines.dropRight(2).forall { (line) =>
+      val pr = line.projectsOn(point)
+      0 <= pr && pr <= 1
+    }
+  }
+
+  def includes(point: Point): Boolean = {
+    lines.dropRight(2).forall { (line) =>
+      val pr = line.projectsOn(point)
+      0 < pr && pr < 1
+    }
+  }
+
+  def onBorder(point: Point): Boolean = {
+    val projections = lines.dropRight(2).map(_.projectsOn(point))
+    val contains = projections.forall { (pr) => 0 <= pr && pr <= 1 }
+    val res = if (contains) {
+      val ex = projections.exists(_ % 1 == 0)
+      ex
+    } else false
+    res
   }
 }

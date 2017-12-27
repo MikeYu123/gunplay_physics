@@ -215,4 +215,32 @@ class ContactMethods extends GraphicsSpec {
     c.remove should equal(Contact(Set(m0, m1), state = ContactState.Remove))
   }
 
+  it should "intersects test 0" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0, 0, 0, 0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(1, 0, 0, 0)
+    val c = Contact(m0, m1)
+    c.intersects should equal(true)
+  }
+
+  it should "intersects test 1" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0, 0, 0, 0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(2, 0, 0, 0)
+    val c = Contact(m0, m1)
+    c.intersects should equal(false)
+  }
+
+  it should "overlaps test 0" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0, 0, 0, 0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(2, 0, 0, 0)
+    val c = Contact(m0, m1)
+    c.overlaps should equal(false)
+  }
+
+  it should "overlaps test 1" in {
+    val m0 = PhysicsObjectFactory.spawnPhOb(0, 0, 0, 0)
+    val m1 = PhysicsObjectFactory.spawnPhOb(0.5, 0.5, 0, 0)
+    val c = Contact(m0, m1)
+    c.overlaps should equal(true)
+  }
+
 }

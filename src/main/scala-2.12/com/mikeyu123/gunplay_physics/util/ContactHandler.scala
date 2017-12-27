@@ -50,7 +50,7 @@ object ContactHandler {
 
   //TODO: to Contact class
   def getGeometryContacts(aabbContacts: Set[Contact]): Set[Contact] = {
-    aabbContacts.filter(IntersectionDetector.intersects)
+    aabbContacts.filter(_.intersects)
   }
 
   def subtract(list: List[PhysicsObject], obj: PhysicsObject): List[PhysicsObject] = {

@@ -4,6 +4,7 @@ import java.util.UUID
 
 import com.mikeyu123.gunplay_physics.objects.{ImmovableObject, MovableObject, PhysicsObject, StaticObject}
 import com.mikeyu123.gunplay_physics.structs.ContactState.ContactState
+import com.mikeyu123.gunplay_physics.util.IntersectionDetector
 
 
 object Contact {
@@ -51,5 +52,19 @@ case class Contact(ab: Set[PhysicsObject], normal: Vector = Vector(0, 0), state:
 
   def removeB: Contact = {
     Contact(ab, normal, ContactState.RemoveB)
+  }
+
+  def intersects: Boolean = {
+    aabbIntersects &&
+      IntersectionDetector.intersects(this)
+  }
+
+  def aabbIntersects: Boolean = {
+    a.aabb.intersects(b.aabb)
+  }
+
+  def overlaps: Boolean = {
+    aabbIntersects &&
+      IntersectionDetector.overlaps(this)
   }
 }

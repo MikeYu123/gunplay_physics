@@ -105,16 +105,10 @@ case class CorrectionQueue(map: Map[PhysicsObject, SortedSet[Correction]]) {
         val previousObject = merger.cumulator.physicsObject
         val otherObject = correction.contact.other(physicsObject)
         val newContact = Contact(previousObject, otherObject)
-        val correctionEntries = ContactSolver.solve(newContact)
-        correctionEntries.foldLeft(merger) {
-          (merger, entry) =>
-            if (entry.physicsObject == previousObject) {
-              val newObject = entry.correction.correct(previousObject).setMotion(entry.correction.afterContactPath)
-              merger(CorrectionQueueEntry(newObject, correction))
-            } else {
-              merger + entry
-            }
-        }
+        if (newContact.intersects) {
+          val correctionEntries = ContactSolver.solve(newContact)
+          merger.fold(correctionEntries, previousObject, correction)
+        } else merger
     }
     val delta = merger.cumulator.physicsObject.center - physicsObject.center
     val newCorrection = Correction(merger.cumulator.correction.contact, delta, 0)
@@ -138,6 +132,18 @@ case class CorrectionQueue(map: Map[PhysicsObject, SortedSet[Correction]]) {
 
     def apply(cumulator: CorrectionQueueEntry): Merger = {
       Merger(cumulator, set)
+    }
+
+    def fold(correctionEntries: Set[CorrectionQueueEntry], previousObject: PhysicsObject, correction: Correction): Merger = {
+      correctionEntries.foldLeft(this) {
+        (merger, entry) =>
+          if (entry.physicsObject == previousObject) {
+            val newObject = entry.correction.correct(previousObject).setMotion(entry.correction.afterContactPath)
+            merger(CorrectionQueueEntry(newObject, correction))
+          } else {
+            merger + entry
+          }
+      }
     }
   }
 

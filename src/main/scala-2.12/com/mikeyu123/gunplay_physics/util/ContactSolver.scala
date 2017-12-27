@@ -47,18 +47,20 @@ object ContactSolver {
   def apply(a: PhysicsObject, b: PhysicsObject): ContactSolver = ContactSolver(Contact(a, b))
 
   def solve(contact: Contact): Set[CorrectionQueueEntry] = {
-    val a = contact.a
-    val b = contact.b
-    val solver = new ContactSolver(contact)
-    (a, b) match {
-      case (_: MovableObject, _: MovableObject) =>
-        val solution = solver.getContactTime
-        solution.entries(a, b)
-      case (_: MovableObject, _: ImmovableObject) |
-           (_: MovableObject, _: StaticObject) =>
-        solver.getContactTime.entries(a)
-      case _ => Set()
-    }
+    if (contact.overlaps) {
+      val a = contact.a
+      val b = contact.b
+      val solver = new ContactSolver(contact)
+      (a, b) match {
+        case (_: MovableObject, _: MovableObject) =>
+          val solution = solver.getContactTime
+          solution.entries(a, b)
+        case (_: MovableObject, _: ImmovableObject) |
+             (_: MovableObject, _: StaticObject) =>
+          solver.getContactTime.entries(a)
+        case _ => Set()
+      }
+    } else Set()
   }
 }
 
@@ -127,8 +129,12 @@ case class ContactSolver(contact: Contact, contactTime: Double = 1) {
 
   def getCorrectionVector(a: Rectangle, b: Rectangle, path: Vector): CorrectionVector = {
     val pointsB = b.points.filter(a.contains)
-    val res = pointsB.size match {
-      case 0 => {
+    val pointsA = a.points.filter(b.contains)
+    val res = (pointsB.size, pointsA.size) match {
+      case (0, 0) => {
+        CorrectionVector(Vector(0, 0), Vector(0, 0))
+      }
+      case (0, _) => {
         getCorrectionVector(b, a, path.reverse).reverseVector
       }
       case _ => {
@@ -140,13 +146,28 @@ case class ContactSolver(contact: Contact, contactTime: Double = 1) {
     res
   }
 
+  //  def getCorrectionVector(a: Rectangle, b: Rectangle, path: Vector): CorrectionVector = {
+  //    val pointsB = b.points.filter(a.contains)
+  //    val res = pointsB.size match {
+  //      case 0 => {
+  //        getCorrectionVector(b, a, path.reverse).reverseVector
+  //      }
+  //      case _ => {
+  //        val resA = getCorrectionVector(a, pointsB, path)
+  //        val resB = getCorrectionVector(b, a.points, path.reverse).reverseVector
+  //        if (resA >= resB) resA else resB
+  //      }
+  //    }
+  //    res
+  //  }
+
   def getCorrectionVector(rectangle: Rectangle, points: Set[Point], path: Vector): CorrectionVector = {
     val corrections = points.foldLeft(Set[CorrectionVector]()) {
       (set, point) =>
         val projection: LineSegment = LineSegment(point, path)
         val intersections: Set[(Point, Vector)] = rectangle.lines.collect {
           case side if projection.willIntersect(side) => (side.intersection(projection), side.toVector)
-        }
+        }.toSet
         val corrs: Set[CorrectionVector] = intersections.collect {
           case int if rectangle.contains(int._1) => CorrectionVector(projection.start - int._1, int._2)
         }

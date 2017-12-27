@@ -1,7 +1,7 @@
 package com.mikeyu123.gunplay_physics.structs
 
 import com.mikeyu123.gunplay_physics.GraphicsSpec
-import com.mikeyu123.gunplay_physics.objects.{MovableObject, PhysicsObject}
+import com.mikeyu123.gunplay_physics.objects.{MovableObject, PhysicsObject, StaticObject}
 import com.mikeyu123.gunplay_physics.util.{ContactHandler, ContactSolver}
 import org.scalactic.Equality
 import org.scalatest.Matchers._
@@ -23,12 +23,11 @@ class CorrectionQueueMethods extends GraphicsSpec {
     physicsObject.move(point - physicsObject.center)
   }
 
-  it should "render correction" in {
+  it should "merge corrections" in {
     val cons = ContactHandler.getGeometryContacts(set)
     val queue = ContactHandler.getCorrectionsQueue(cons)
     val queue1 = queue.mergeCorrections
     val result: Set[PhysicsObject] = queue1.applyCorrections
-
 
     val o0 = move(obj0, Point(0.5, 0))
     val o1 = move(obj1, Point(1.5, -1))
@@ -41,4 +40,23 @@ class CorrectionQueueMethods extends GraphicsSpec {
     }
   }
 
+
+  it should "merge corrections 0" in {
+    val _obj0 = StaticObject(Rectangle(Point(3, 0), 6, 2), Point(3, 0))
+    val _obj1 = MovableObject(Rectangle(Point(0.5, 2.5), 1, 1), Point(0.5, 2.5),
+      PhysicsProperties(Motion(Vector(1, -1), math.Pi / 4d))).applyMotion
+    val _obj2 = PhysicsObjectFactory.spawnPhOb(2.5, 2.5, 0, -1.5).applyMotion
+    val _obj3 = PhysicsObjectFactory.spawnPhOb(4.5, 1.5, -1.5, 0).applyMotion
+
+    val objs = Set(_obj0, _obj1, _obj2, _obj3)
+    val aabb = ContactHandler.getAabbContactsFromLeaf(objs)
+    val cons = ContactHandler.getGeometryContacts(aabb)
+    val queue = ContactHandler.getCorrectionsQueue(cons)
+    val queue1 = queue.mergeCorrections
+    val result: Set[PhysicsObject] = queue1.applyCorrections
+    print(0)
+
+    //    result should equal {
+    //    }
+  }
 }
