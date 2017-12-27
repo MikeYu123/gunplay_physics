@@ -4,7 +4,13 @@ import java.util.UUID
 
 import com.mikeyu123.gunplay_physics.structs.{GeometryPrimitive, Motion, PhysicsProperties, Point, Vector}
 
-case class ImmovableObject(shape: GeometryPrimitive, center: Point, properties: PhysicsProperties, id: UUID = UUID.randomUUID()) extends PhysicsObject {
+object ImmovableObject {
+  def apply(shape: GeometryPrimitive, center: Point, properties: PhysicsProperties, id: UUID = UUID.randomUUID()): ImmovableObject =
+    new ImmovableObject(shape, center, properties, id)
+}
+
+class ImmovableObject(override val shape: GeometryPrimitive, override val center: Point,
+                      override val properties: PhysicsProperties, override val id: UUID = UUID.randomUUID()) extends PhysicsObject {
 
   def move(vector: Vector): PhysicsObject = {
     ImmovableObject(shape.move(vector), center + vector, properties, id)

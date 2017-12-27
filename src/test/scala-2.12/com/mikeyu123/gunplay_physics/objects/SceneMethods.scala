@@ -8,6 +8,8 @@ import org.scalatest.Matchers._
 
 class SceneMethods extends GraphicsSpec {
 
+  implicit val physicsObjectEquality = physicsObjectEq
+
   val contactListener = new ContactListener {
     override def preSolve(contact: Contact): Contact = {
       contact.ab.exists(_.properties.motion.path == Vector(0, -1)) && contact.ab.exists(_.properties.motion.path == Vector(1, 0))

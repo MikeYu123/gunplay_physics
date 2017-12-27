@@ -52,4 +52,8 @@ case class Contact(ab: Set[PhysicsObject], normal: Vector = Vector(0, 0), state:
   def removeB: Contact = {
     Contact(ab, normal, ContactState.RemoveB)
   }
+
+  def removeBoth: Contact = {
+    Contact(ab, normal, ContactState.RemoveBoth)
+  }
 }
