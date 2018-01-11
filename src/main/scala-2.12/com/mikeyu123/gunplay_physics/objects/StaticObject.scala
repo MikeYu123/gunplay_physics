@@ -4,9 +4,16 @@ import java.util.UUID
 
 import com.mikeyu123.gunplay_physics.structs.{GeometryPrimitive, Motion, PhysicsProperties, Point, Vector}
 
-case class StaticObject(shape: GeometryPrimitive, center: Point,
-                        properties: PhysicsProperties = PhysicsProperties(Motion(Vector(0, 0), 0)),
-                        id: UUID = UUID.randomUUID()) extends PhysicsObject {
+object StaticObject {
+  def apply(shape: GeometryPrimitive, center: Point,
+            properties: PhysicsProperties = PhysicsProperties(Motion(Vector(0, 0), 0)),
+            id: UUID = UUID.randomUUID()): StaticObject =
+    new StaticObject(shape, center, properties, id)
+}
+
+class StaticObject(override val shape: GeometryPrimitive, override val center: Point,
+                   override val properties: PhysicsProperties = PhysicsProperties(Motion(Vector(0, 0), 0)),
+                   override val id: UUID = UUID.randomUUID()) extends PhysicsObject {
 
   def move(vector: Vector): PhysicsObject = this
 
