@@ -29,4 +29,16 @@ class IntersectorDetectorMethods extends GraphicsSpec {
       false
     }
   }
+
+  it should "rect-rect overlap test 0" in {
+    IntersectionDetector.overlaps(r0, r1) should equal {
+      true
+    }
+  }
+
+  it should "rect-rect overlap test 1" in {
+    IntersectionDetector.overlaps(r0, r1.move(0, 1)) should equal {
+      false
+    }
+  }
 }

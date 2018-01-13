@@ -57,13 +57,22 @@ case class LineSegment(start: Point, end: Point) {
     point.equals(start) || point.equals(end)
   }
 
-  def projectsOn(point: Point): Boolean = {
+  def projectsOn(point: Point): Double = {
     val vec = toVector
     val len = vec * vec
     val queryVec = point - start
     val dot = vec * queryVec
-    0 <= dot && dot <= len
+    val res = dot / len
+    res
   }
+
+//  def projectsOn(point: Point): Boolean = {
+//    val vec = toVector
+//    val len = vec * vec
+//    val queryVec = point - start
+//    val dot = vec * queryVec
+//    0 <= dot && dot <= len
+//  }
 
   def direction(point: Point): Double = {
     val (v0, v1) = (toVector, point - start)
@@ -90,6 +99,7 @@ case class LineSegment(start: Point, end: Point) {
     val line1 = LineSegment(start, lineSegment.end)
     val direction4 = line1.direction(end)
     val direction5 = line1.direction(lineSegment.start)
-    (direction0 * direction1 <= 0) & (direction2 * direction3 >= 0) & (direction4 * direction5 >= 0)
+    val res =  (direction0 * direction1 <= 0) & (direction2 * direction3 >= 0) & (direction4 * direction5 >= 0)
+    res
   }
 }

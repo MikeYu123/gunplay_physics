@@ -10,7 +10,7 @@ class RectangleSpec extends GraphicsSpec {
   implicit val rectangleEquality = rectangleEq
   it should "render correct set of lines" in {
     Rectangle(Point(0, 0), Point(0, 1), Point(1, 1), Point(1, 0)).lines should equal(
-      Set(
+      List(
         LineSegment(Point(0, 0), Point(0, 1)),
         LineSegment(Point(0, 1), Point(1, 1)),
         LineSegment(Point(1, 1), Point(1, 0)),

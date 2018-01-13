@@ -7,7 +7,7 @@ import org.scalatest.Matchers._
 
 class CorrectionQueueEntryMethods extends GraphicsSpec {
 
- implicit val physicsObjectEquality = physicsObjectEq
+  implicit val physicsObjectEquality = physicsObjectEq
 
   val r0 = Rectangle(Point(0.5, 2.5), Point(2.5, 4.5), Point(4.5, 2.5), Point(2.5, 0.5))
   val r1 = Rectangle(Point(3, 0), Point(3, 2), Point(5, 2), Point(5, 0))
@@ -21,7 +21,7 @@ class CorrectionQueueEntryMethods extends GraphicsSpec {
     val entry = cs.entry(p0)
     val p2 = MovableObject(r0, r0.center, pr0)
     entry.swapSubject(p0, p2) should equal {
-      CorrectionQueueEntry(p2,Correction(Contact(Set[PhysicsObject](p1, p2), entry.correction.contact.normal), entry.correction.afterContactPath, entry.correction.contactTime))
+      CorrectionQueueEntry(p2, Correction(Contact(Set[PhysicsObject](p1, p2), entry.correction.contact.normal), entry.correction.afterContactPath, entry.correction.contactTime))
     }
   }
 
@@ -29,13 +29,15 @@ class CorrectionQueueEntryMethods extends GraphicsSpec {
     val entry = cs.entry(p0)
     val p2 = MovableObject(r0, r0.center, pr0)
     entry.swapSubject(p1, p2) should equal {
-      CorrectionQueueEntry(p0,Correction(Contact(Set[PhysicsObject](p0, p2), entry.correction.contact.normal), entry.correction.afterContactPath, entry.correction.contactTime))
+      CorrectionQueueEntry(p0, Correction(Contact(Set[PhysicsObject](p0, p2), entry.correction.contact.normal), entry.correction.afterContactPath, entry.correction.contactTime))
     }
   }
 
-  it should "toTuple test 0" in{
+  it should "toTuple test 0" in {
     val entry = cs.entry(p0)
-    entry.toTuple should equal{(p0, cs.correction(p0))}
+    entry.toTuple should equal {
+      (p0, cs.correction(p0))
+    }
   }
 
 }

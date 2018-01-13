@@ -16,14 +16,50 @@ class RectangleMethods extends GraphicsSpec {
   }
 
   it should "contains test 0" in {
-    r0.contains( Point(1, 2)) should equal {
+    r0.contains(Point(1, 2)) should equal {
       true
     }
   }
 
   it should "contains test 1" in {
-    r0.contains( Point(2, 2)) should equal {
+    r0.contains(Point(2, 2)) should equal {
       false
+    }
+  }
+
+  it should "onBorder test 0" in {
+    r1.onBorder(Point(1, 3)) should equal {
+      true
+    }
+  }
+
+  it should "onBorder test 1" in {
+    r1.onBorder(Point(0, 3)) should equal {
+      false
+    }
+  }
+
+  it should "onBorder test 2" in {
+    r1.onBorder(Point(1.5, 3)) should equal {
+      false
+    }
+  }
+
+  it should "onBorder test 3" in {
+    r0.onBorder(Point(1, 0.5)) should equal {
+      true
+    }
+  }
+
+  it should "includes test 0" in {
+    r0.includes(Point(1, 0.5)) should equal {
+      false
+    }
+  }
+
+  it should "includes test 1" in {
+    r0.includes(Point(1, 1)) should equal {
+      true
     }
   }
 

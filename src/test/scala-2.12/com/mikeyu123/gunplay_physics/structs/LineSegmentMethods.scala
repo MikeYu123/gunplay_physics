@@ -91,14 +91,16 @@ class LineSegmentMethods extends GraphicsSpec {
   it should "projectsOn line test 0" in {
     val l = LineSegment(Point(0, 0), Point(5, 0))
     l.projectsOn(Point(3, 5)) should equal {
-      true
+      0.6d
+//      true
     }
   }
 
   it should "projectsOn line test 1" in {
     val l = LineSegment(Point(0, 0), Point(5, 0))
     l.projectsOn(Point(6, 5)) should equal {
-      false
+      1.2
+//      false
     }
   }
 
