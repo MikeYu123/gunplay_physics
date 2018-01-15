@@ -7,7 +7,7 @@ object IntersectionDetector {
 
   def intersects(contact: Contact): Boolean = intersects(contact.a.shape, contact.b.shape)
 
-  def overlaps(contact: Contact): Boolean = intersects(contact.a.shape, contact.b.shape)
+  def overlaps(contact: Contact): Boolean = overlaps(contact.a.shape, contact.b.shape)
 
   def intersects(a: GeometryPrimitive, b: GeometryPrimitive): Boolean = {
     (a, b) match {
