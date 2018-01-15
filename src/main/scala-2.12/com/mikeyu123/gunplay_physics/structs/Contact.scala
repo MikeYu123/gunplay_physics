@@ -67,4 +67,8 @@ case class Contact(ab: Set[PhysicsObject], normal: Vector = Vector(0, 0), state:
     aabbIntersects &&
       IntersectionDetector.overlaps(this)
   }
+
+  def removeBoth: Contact = {
+    Contact(ab, normal, ContactState.RemoveBoth)
+  }
 }

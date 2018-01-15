@@ -105,9 +105,19 @@ case class ContactHandler(objs: Set[PhysicsObject], contacts: Set[Contact], qTre
   }
 
   def clear: ContactHandler = {
-    val removedObjects = contacts.collect {
-      case c if c.state == ContactState.RemoveA => c.a.id
-      case c if c.state == ContactState.RemoveB => c.b.id
+    //    val removedObjects = contacts.collect {
+    //      case c if c.state == ContactState.RemoveA => c.a.id
+    //      case c if c.state == ContactState.RemoveB => c.b.id
+    ////      case c if c.state == ContactState.RemoveBoth => Set(c.a.id, c.b.id)
+    //    }
+    val removedObjects = contacts.foldLeft(Set[UUID]()) {
+      (res, con) =>
+        con.state match {
+          case ContactState.RemoveA => res + con.a.id
+          case ContactState.RemoveB => res + con.b.id
+          case ContactState.RemoveBoth => res + con.a.id + con.b.id
+          case _ => res
+        }
     }
     val removedContacts: Set[Contact] = removedObjects.size match {
       case 0 => contacts.filter(_.state != ContactState.Default)
