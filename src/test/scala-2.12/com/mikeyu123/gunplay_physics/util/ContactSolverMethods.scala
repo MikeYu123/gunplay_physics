@@ -113,20 +113,21 @@ class ContactSolverMethods extends GraphicsSpec {
     val p1 = ImmovableObject(r1, r1.center, pr1)
     val con = Contact(p0, p1)
     val res = ContactSolver.solve(con)
-    res.head.correction.contactTime should equal(1 / 3.0)
+    val t = res.head.correction.contactTime
+    res.head.correction.contactTime should equal(0.2)
   }
 
-  it should "solve test21" in {
+  it should "solve test 2" in {
     val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
     val pr1 = PhysicsProperties(Motion(Vector(1, 3), 0))
     val p0 = MovableObject(r0, r0.center, pr0)
     val p1 = ImmovableObject(r1, r1.center, pr1)
     val con = Contact(p1, p0)
     val res = ContactSolver.solve(con)
-    res.head.correction.contactTime should equal(1 / 3.0)
+    res.head.correction.contactTime should equal(0.2)
   }
 
-  it should "solve test20" in {
+  it should "solve test 2.1" in {
     val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
     val pr1 = PhysicsProperties(Motion(Vector(1, 3), 0))
     val p0 = MovableObject(r0, r0.center, pr0)
@@ -136,50 +137,10 @@ class ContactSolverMethods extends GraphicsSpec {
     val res = time {
       ContactSolver.solve(con)
     }
-    res.head.correction.contactTime should equal(1 / 3.0)
+    res.head.correction.contactTime should equal(0.2)
   }
 
-  it should "solve test22" in {
-    val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
-    val pr1 = PhysicsProperties(Motion(Vector(1, 3), 0))
-    val p0 = MovableObject(r0, r0.center, pr0)
-    val p1 = ImmovableObject(r1, r1.center, pr1)
-    val con = Contact(p1, p0)
-    val res = ContactSolver.solve(con)
-    res.head.correction.contactTime should equal(1 / 3.0)
-  }
-
-  it should "solve test222" in {
-    val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
-    val pr1 = PhysicsProperties(Motion(Vector(1, 3), 0))
-    val st0 = PhysicsObjectFactory.spawnPhOb(0)
-    val st1 = PhysicsObjectFactory.spawnPhOb(2)
-//    val p0 = MovableObject(r0, r0.center, pr0)
-//    val p1 = ImmovableObject(r1, r1.center, pr1)
-    val con = Contact(st0, st0)
-    val res = ContactSolver.solve(con)
-//    res.head.correction.contactTime should equal(Double.PositiveInfinity)
-    res.size should equal(0)
-  }
-
-  it should "solve test221" in {
-    val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
-    val p0 = MovableObject(r0, r0.center, pr0)
-    val p1 = StaticObject(r1, r1.center)
-    val con = Contact(p1, p0)
-    val res = ContactSolver.solve(con)
-    res.head.correction.contactTime should equal(1 / 3.0)
-  }
-
-  it should "solve test23" in {
-    val p0 = StaticObject(r0, r0.center)
-    val p1 = StaticObject(r1, r1.center)
-    val con = Contact(p1, p0)
-    val res = ContactSolver.solve(con)
-    res.size should equal(0)
-  }
-
-  it should "solve test220" in {
+  it should "solve test 2.2" in {
     val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
     val pr1 = PhysicsProperties(Motion(Vector(1, 3), 0))
     val p0 = MovableObject(r0, r0.center, pr0)
@@ -189,10 +150,47 @@ class ContactSolverMethods extends GraphicsSpec {
     val res = time {
       ContactSolver.solve(con)
     }
+    res.head.correction.contactTime should equal(0.2)
+  }
+
+  it should "solve test 2.3" in {
+    val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
+    val pr1 = PhysicsProperties(Motion(Vector(1, 3), 0))
+    val p0 = MovableObject(r0, r0.center, pr0)
+    val p1 = ImmovableObject(r1, r1.center, pr1)
+    val con = Contact(p1, p0)
+    val res = ContactSolver.solve(con)
+    res.head.correction.contactTime should equal(0.2)
+  }
+
+  it should "solve test 4" in {
+    val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
+    val pr1 = PhysicsProperties(Motion(Vector(1, 3), 0))
+    val st0 = PhysicsObjectFactory.spawnPhOb(0)
+    val st1 = PhysicsObjectFactory.spawnPhOb(2)
+    val con = Contact(st0, st0)
+    val res = ContactSolver.solve(con)
+    res.size should equal(0)
+  }
+
+  it should "solve test 5" in {
+    val pr0 = PhysicsProperties(Motion(Vector(1.5, -1.5), 0))
+    val p0 = MovableObject(r0, r0.center, pr0)
+    val p1 = StaticObject(r1, r1.center)
+    val con = Contact(p1, p0)
+    val res = ContactSolver.solve(con)
     res.head.correction.contactTime should equal(1 / 3.0)
   }
 
-  it should "solve test24" in {
+  it should "solve test 6" in {
+    val p0 = StaticObject(r0, r0.center)
+    val p1 = StaticObject(r1, r1.center)
+    val con = Contact(p1, p0)
+    val res = ContactSolver.solve(con)
+    res.size should equal(0)
+  }
+
+  it should "solve test 7" in {
     val obj0 = PhysicsObjectFactory.spawnPhOb(0, 0, 1, 0).applyMotion
     val obj2 = PhysicsObjectFactory.spawnPhOb(1.5, 1.5, -1, -1).applyMotion
     val con = Contact(obj0, obj2)
